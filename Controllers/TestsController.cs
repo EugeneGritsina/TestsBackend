@@ -141,11 +141,17 @@ namespace WebApiAttempt1.Controllers
         //}
 
         [HttpPut]
-        public ActionResult Put([FromBody] int id) //перегрузка метода Put(update), который открывает/закрывает   тест
+        public ActionResult Put([FromBody] WholeTestRawModel id) //перегрузка метода Put(update), который открывает/закрывает   тест
         {
-            TestsContext.Tests.Find(id).IsOpen = TestsContext.Tests.Find(id).IsOpen == true ? false : true;
-            TestsContext.SaveChanges();
-            return Ok(id);
+            try { 
+                TestsContext.Tests.Find(id).IsOpen = TestsContext.Tests.Find(id).IsOpen == true ? false : true;
+                TestsContext.SaveChanges();
+                return Ok(id);
+            }
+            catch
+            {
+                return BadRequest();
+            }
         }
 
         // DELETE: api/ApiWithActions/5

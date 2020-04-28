@@ -34,6 +34,14 @@ namespace WebApiAttempt1
 
             app.UseRouting();
 
+            app.UseCors(builder =>
+            {
+                builder.WithOrigins("https://localhost:44340",
+                    "https://localhost:4200");
+                builder.AllowAnyHeader();
+                builder.AllowAnyMethod();
+            });
+
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();

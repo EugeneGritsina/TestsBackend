@@ -8173,11 +8173,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\projects\\WebApiAttempt1\\WebApiAttempt1\\WebApiAttempt1.csproj",
+      "projectUniqueName": "C:\\projects\\TestsBackend\\WebApiAttempt1.csproj",
       "projectName": "WebApiAttempt1",
-      "projectPath": "C:\\projects\\WebApiAttempt1\\WebApiAttempt1\\WebApiAttempt1.csproj",
+      "projectPath": "C:\\projects\\TestsBackend\\WebApiAttempt1.csproj",
       "packagesPath": "C:\\Users\\eugen\\.nuget\\packages\\",
-      "outputPath": "C:\\projects\\WebApiAttempt1\\WebApiAttempt1\\obj\\",
+      "outputPath": "C:\\projects\\TestsBackend\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "C:\\Users\\eugen\\AppData\\Roaming\\NuGet\\NuGet.Config",

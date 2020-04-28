@@ -8,6 +8,9 @@ function getItems() {
         .catch(error => console.error('Unable to get items.', error));
 }
 
+let sendTestButton = document.getElementById("save");
+sendTestButton.addEventListener("click", addItem);
+
 function addItem() {
     const subject = document.getElementById("subject").value;
     const test_name = document.getElementById("test_name").value;

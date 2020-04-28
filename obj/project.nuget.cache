@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "KvJlFntNP7c31ER28uVzjssijKwHVKfAL57CT4e+7QM8Xf2Xnuzjcep1kzo4vxdxm2OXwSb7etfThcDjC60fGw==",
+  "dgSpecHash": "XegiHT1jK2LGjg6fmIsb4LoPugX0qKCXAWQAomeFck9k/CkBDkIe+gddznaAyTP4rcd7KHKOh8kRp+ZKYDB0sQ==",
   "success": true,
-  "projectFilePath": "C:\\projects\\WebApiAttempt1\\WebApiAttempt1\\WebApiAttempt1.csproj",
+  "projectFilePath": "C:\\projects\\TestsBackend\\WebApiAttempt1.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\eugen\\.nuget\\packages\\microsoft.aspnetcore.html.abstractions\\2.2.0\\microsoft.aspnetcore.html.abstractions.2.2.0.nupkg.sha512",
     "C:\\Users\\eugen\\.nuget\\packages\\microsoft.aspnetcore.razor\\2.2.0\\microsoft.aspnetcore.razor.2.2.0.nupkg.sha512",
