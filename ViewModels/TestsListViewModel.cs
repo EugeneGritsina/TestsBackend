@@ -4,7 +4,9 @@ namespace WebApiAttempt1.Models
 {
     public class TestsListViewModel
     {
-        public Subject subject { get; set; }
-        public List<Test> tests { get; set; }
+        public int Id { get; set; }
+        public string Name { get; set; }
+        public int SubjectTypeId { get; set; }
+        public List<Test> Tests { get; set; }
     }
 }

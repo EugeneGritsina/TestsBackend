@@ -27,8 +27,10 @@ namespace WebApiAttempt1.Controllers
             return (from s in TestsContext.Subjects
                     select new TestsListViewModel
                     {
-                        subject = s,
-                        tests = (from t2 in TestsContext.Tests
+                        Id = s.Id,
+                        SubjectTypeId = s.SubjectTypeId,
+                        Name = s.Name,
+                        Tests = (from t2 in TestsContext.Tests
                                  where t2.SubjectId == s.Id
                                  select t2).ToList()
                     }).ToList();
