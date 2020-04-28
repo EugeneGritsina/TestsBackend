@@ -108,24 +108,23 @@ JSON Модель:
 POST запрос на url:
 https://localhost:44347/api/tests/
 
-//пока что я не до конца реализовал добавление теста, т.к. большая морока была принять в нужном формате JSON. Если вам будет изи забабахать нужный мне json, я так же быстро реализую добавление теста
-
 4)DELETE:
 DELETE запрос на url:
 https://localhost:44347/api/tests/1
 где 1 - id нужного теста
 
-put (обновление теста) пока не реализовал, тоже трабл с принятием json
+put (обновление теста) пока не реализовал, трабл с принятием json
 
 
 Модель Test:
 1) int id
 2) int subject_id
-3) string DateTime (nullable) dueDateTime
-4) TimeSpan (nullable) estimatedTime
-5) int questionsAmount
-6) int maxMark
-7) bool isOpen
+3) string Name
+4) DateTime (nullable) dueDateTime
+5) TimeSpan (nullable) estimatedTime
+6) int questionsAmount
+7) int maxMark
+8) bool isOpen
 
 Модель Subject
 1) int id
