@@ -137,11 +137,16 @@ JSON Модель:
 ```
 
 3) CREATE, PUT: сохранение/обновление теста:
-POST запрос на url
+POST/PUT запрос на url
 http://testsbsu.azurewebsites.net/api/tests/
 
-4)DELETE:
+4) DELETE:
 DELETE запрос на url:
+http://testsbsu.azurewebsites.net/api/tests/1
+где 1 - id нужного теста
+
+5) PUT: закрыть/открыть возможность прохождения теста
+PUT запрос на url
 http://testsbsu.azurewebsites.net/api/tests/1
 где 1 - id нужного теста
 
