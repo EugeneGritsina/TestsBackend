@@ -31,5 +31,8 @@ namespace WebApiAttempt1.Models
 
         [Column(name: "is_open")]
         public bool IsOpen { get; set; }
+
+        [Column(name: "creation_date")]
+        public DateTime CreationDate { get; set; }
     }
 }

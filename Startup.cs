@@ -5,6 +5,13 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Hosting;
+using Microsoft.AspNet.OData.Extensions;
+using Microsoft.AspNetCore.Routing;
+using System;
+using Microsoft.OData;
+using Microsoft.OData.Edm;
+using Microsoft.AspNet.OData.Builder;
+using WebApiAttempt1.ViewModels;
 
 namespace WebApiAttempt1
 {
@@ -20,6 +27,10 @@ namespace WebApiAttempt1
             string connection = configuration.GetConnectionString("TestsBSUConnection");
             services.AddDbContext<TestsContext>(options => options.UseSqlServer(connection));
             services.AddControllers();
+            //services.AddOData();
+            //services.AddControllers(mvcOptions =>
+            //    mvcOptions.EnableEndpointRouting = false);
+            //services.AddMvc();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
@@ -29,15 +40,12 @@ namespace WebApiAttempt1
                 app.UseDeveloperExceptionPage();
             }
 
-            app.UseDefaultFiles();
             app.UseStaticFiles();
-
             app.UseRouting();
 
             app.UseCors(builder =>
             {
-                builder.WithOrigins("https://localhost:44340",
-                    "https://localhost:4200");
+                builder.AllowAnyOrigin();
                 builder.AllowAnyHeader();
                 builder.AllowAnyMethod();
             });
@@ -46,6 +54,20 @@ namespace WebApiAttempt1
             {
                 endpoints.MapControllers();
             });
+
+            //app.UseMvc(routeBuilder =>
+            //{
+            //    routeBuilder.Select().Filter().OrderBy();
+            //    routeBuilder.MapODataServiceRoute("tests", "api", GetEdmModel());
+            //});
         }
+
+        //private IEdmModel GetEdmModel()
+        //{
+        //    var odataBuilder = new ODataConventionModelBuilder();
+        //    odataBuilder.EntitySet<TestWithObjectSubject>("Tests");
+
+        //    return odataBuilder.GetEdmModel();
+        //}
     }
 }

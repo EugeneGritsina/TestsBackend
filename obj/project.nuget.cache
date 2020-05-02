@@ -1,10 +1,11 @@
 {
   "version": 2,
-  "dgSpecHash": "XegiHT1jK2LGjg6fmIsb4LoPugX0qKCXAWQAomeFck9k/CkBDkIe+gddznaAyTP4rcd7KHKOh8kRp+ZKYDB0sQ==",
+  "dgSpecHash": "3I3XyW0Zb0fqNSfTgkwlKa5gFI1g2F13cbm9LqempJByihO+52BZ1bIM8jq4OhVBkd9TVBhCljipCmT0mjWKqA==",
   "success": true,
   "projectFilePath": "C:\\projects\\TestsBackend\\WebApiAttempt1.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\eugen\\.nuget\\packages\\microsoft.aspnetcore.html.abstractions\\2.2.0\\microsoft.aspnetcore.html.abstractions.2.2.0.nupkg.sha512",
+    "C:\\Users\\eugen\\.nuget\\packages\\microsoft.aspnetcore.odata\\7.4.0\\microsoft.aspnetcore.odata.7.4.0.nupkg.sha512",
     "C:\\Users\\eugen\\.nuget\\packages\\microsoft.aspnetcore.razor\\2.2.0\\microsoft.aspnetcore.razor.2.2.0.nupkg.sha512",
     "C:\\Users\\eugen\\.nuget\\packages\\microsoft.aspnetcore.razor.language\\3.1.0\\microsoft.aspnetcore.razor.language.3.1.0.nupkg.sha512",
     "C:\\Users\\eugen\\.nuget\\packages\\microsoft.aspnetcore.razor.runtime\\2.2.0\\microsoft.aspnetcore.razor.runtime.2.2.0.nupkg.sha512",
@@ -37,6 +38,9 @@
     "C:\\Users\\eugen\\.nuget\\packages\\microsoft.identity.client\\3.0.8\\microsoft.identity.client.3.0.8.nupkg.sha512",
     "C:\\Users\\eugen\\.nuget\\packages\\microsoft.netcore.platforms\\2.1.2\\microsoft.netcore.platforms.2.1.2.nupkg.sha512",
     "C:\\Users\\eugen\\.nuget\\packages\\microsoft.netcore.targets\\1.1.0\\microsoft.netcore.targets.1.1.0.nupkg.sha512",
+    "C:\\Users\\eugen\\.nuget\\packages\\microsoft.odata.core\\7.6.1\\microsoft.odata.core.7.6.1.nupkg.sha512",
+    "C:\\Users\\eugen\\.nuget\\packages\\microsoft.odata.edm\\7.6.1\\microsoft.odata.edm.7.6.1.nupkg.sha512",
+    "C:\\Users\\eugen\\.nuget\\packages\\microsoft.spatial\\7.6.1\\microsoft.spatial.7.6.1.nupkg.sha512",
     "C:\\Users\\eugen\\.nuget\\packages\\microsoft.visualstudio.web.codegeneration\\3.1.2\\microsoft.visualstudio.web.codegeneration.3.1.2.nupkg.sha512",
     "C:\\Users\\eugen\\.nuget\\packages\\microsoft.visualstudio.web.codegeneration.contracts\\3.1.2\\microsoft.visualstudio.web.codegeneration.contracts.3.1.2.nupkg.sha512",
     "C:\\Users\\eugen\\.nuget\\packages\\microsoft.visualstudio.web.codegeneration.core\\3.1.2\\microsoft.visualstudio.web.codegeneration.core.3.1.2.nupkg.sha512",

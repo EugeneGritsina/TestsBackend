@@ -24,6 +24,7 @@
     ".NETCoreApp,Version=v3.1": {
       "WebApiAttempt1/1.0.0": {
         "dependencies": {
+          "Microsoft.AspNetCore.OData": "7.4.0",
           "Microsoft.EntityFrameworkCore": "3.1.3",
           "Microsoft.EntityFrameworkCore.SqlServer": "3.1.3",
           "Microsoft.VisualStudio.Web.CodeGeneration.Design": "3.1.2",
@@ -309,6 +310,21 @@
       "Microsoft.AspNetCore.Html.Abstractions/2.2.0": {
         "dependencies": {
           "System.Text.Encodings.Web": "4.5.0"
+        }
+      },
+      "Microsoft.AspNetCore.OData/7.4.0": {
+        "dependencies": {
+          "Microsoft.OData.Core": "7.6.1",
+          "Newtonsoft.Json": "11.0.2"
+        },
+        "runtime": {
+          "lib/netcoreapp3.1/Microsoft.AspNetCore.OData.dll": {
+            "assemblyVersion": "7.4.0.0",
+            "fileVersion": "7.4.0.10420"
+          }
+        },
+        "compile": {
+          "lib/netcoreapp3.1/Microsoft.AspNetCore.OData.dll": {}
         }
       },
       "Microsoft.AspNetCore.Razor/2.2.0": {
@@ -872,6 +888,43 @@
       },
       "Microsoft.NETCore.Platforms/2.1.2": {},
       "Microsoft.NETCore.Targets/1.1.0": {},
+      "Microsoft.OData.Core/7.6.1": {
+        "dependencies": {
+          "Microsoft.OData.Edm": "7.6.1",
+          "Microsoft.Spatial": "7.6.1"
+        },
+        "runtime": {
+          "lib/netstandard1.1/Microsoft.OData.Core.dll": {
+            "assemblyVersion": "7.6.1.0",
+            "fileVersion": "7.6.1.30930"
+          }
+        },
+        "compile": {
+          "lib/netstandard1.1/Microsoft.OData.Core.dll": {}
+        }
+      },
+      "Microsoft.OData.Edm/7.6.1": {
+        "runtime": {
+          "lib/netstandard1.1/Microsoft.OData.Edm.dll": {
+            "assemblyVersion": "7.6.1.0",
+            "fileVersion": "7.6.1.30930"
+          }
+        },
+        "compile": {
+          "lib/netstandard1.1/Microsoft.OData.Edm.dll": {}
+        }
+      },
+      "Microsoft.Spatial/7.6.1": {
+        "runtime": {
+          "lib/netstandard1.1/Microsoft.Spatial.dll": {
+            "assemblyVersion": "7.6.1.0",
+            "fileVersion": "7.6.1.30930"
+          }
+        },
+        "compile": {
+          "lib/netstandard1.1/Microsoft.Spatial.dll": {}
+        }
+      },
       "Microsoft.VisualStudio.Web.CodeGeneration/3.1.2": {
         "dependencies": {
           "Microsoft.Extensions.DependencyInjection": "3.1.3",
@@ -3735,6 +3788,13 @@
       "path": "microsoft.aspnetcore.html.abstractions/2.2.0",
       "hashPath": "microsoft.aspnetcore.html.abstractions.2.2.0.nupkg.sha512"
     },
+    "Microsoft.AspNetCore.OData/7.4.0": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-gt7kCYR78rgpv3XuQ1M5ZkZFvOsBQJuf8Qb+h3ztqWVC36XAkSapjfIgzASC8R49YrzxsfrXqp9FVExqZQSX6w==",
+      "path": "microsoft.aspnetcore.odata/7.4.0",
+      "hashPath": "microsoft.aspnetcore.odata.7.4.0.nupkg.sha512"
+    },
     "Microsoft.AspNetCore.Razor/2.2.0": {
       "type": "package",
       "serviceable": true,
@@ -3958,6 +4018,27 @@
       "sha512": "sha512-aOZA3BWfz9RXjpzt0sRJJMjAscAUm3Hoa4UWAfceV9UTYxgwZ1lZt5nO2myFf+/jetYQo4uTP7zS8sJY67BBxg==",
       "path": "microsoft.netcore.targets/1.1.0",
       "hashPath": "microsoft.netcore.targets.1.1.0.nupkg.sha512"
+    },
+    "Microsoft.OData.Core/7.6.1": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-dm4dAbgDehOv3sgxzlZW+FUtnn93irsv15uDJRNXKk5LUiA5ejZFhCp5hUd/JcUr5Hb0T0SAlhXxlPEKPEeavg==",
+      "path": "microsoft.odata.core/7.6.1",
+      "hashPath": "microsoft.odata.core.7.6.1.nupkg.sha512"
+    },
+    "Microsoft.OData.Edm/7.6.1": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-bi1IM0Uctpp34YnVJGy7afsTViArP/sQjFGWyg2p+z/16xumNUmG0H4y8xnjM57fJjGZHyC7Oe6WHbnJDcM1Pw==",
+      "path": "microsoft.odata.edm/7.6.1",
+      "hashPath": "microsoft.odata.edm.7.6.1.nupkg.sha512"
+    },
+    "Microsoft.Spatial/7.6.1": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-3gZZwLABqkyRHRuVHTHUUbEsyasSX/bD1c/UBQpoFPC0yElszBYdv80/awaaPjzeeQkfFLyGoxNySNkLTbHKOA==",
+      "path": "microsoft.spatial/7.6.1",
+      "hashPath": "microsoft.spatial.7.6.1.nupkg.sha512"
     },
     "Microsoft.VisualStudio.Web.CodeGeneration/3.1.2": {
       "type": "package",
