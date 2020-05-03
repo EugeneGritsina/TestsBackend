@@ -20,22 +20,6 @@ namespace WebApiAttempt1.Controllers
             TestsContext = testsContext;
         }
 
-        // GET: api/Tests
-        //[HttpGet]
-        //[Produces("application/json")]
-        //public List<SubjectsListViewModel> GetSubjects()
-        //{
-        //    return (from s in TestsContext.Subjects
-        //            select new SubjectsListViewModel
-        //            {
-        //                Id = s.Id,
-        //                SubjectTypeId = s.SubjectTypeId,
-        //                Name = s.Name,
-        //                Tests = (from t2 in TestsContext.Tests
-        //                         where t2.SubjectId == s.Id
-        //                         select t2).ToList()
-        //            }).ToList();
-        //}
 
         [HttpGet]
         [Produces("application/json")]
@@ -61,6 +45,47 @@ namespace WebApiAttempt1.Controllers
         [HttpGet("{id}", Name = "Get")]
         [Produces("application/json")]
         public ActionResult<TestPassingModel> Get(int id)
+        {
+            TestPassingModel test = new TestPassingModel();
+            try
+            {
+                test = (from t in TestsContext.Tests
+                        where t.Id == id
+                        select new TestPassingModel
+                        {
+                            Id = t.Id,
+                            Name = t.Name,
+                            DueDateTime = t.DueDateTime,
+                            EstimatedTime = new DateTime(1970, 1, 1, t.EstimatedTime.Value.Hours, t.EstimatedTime.Value.Minutes, t.EstimatedTime.Value.Seconds),
+                            QuestionsAmount = t.QuestionsAmount,
+                            MaxMark = t.MaxMark,
+                            IsOpen = t.IsOpen,
+                            CreationDate = t.CreationDate,
+                            SubjectObject = (from s in TestsContext.Subjects
+                                             where s.Id == t.SubjectId
+                                             select s).First(),
+                            Questions = (from q in TestsContext.Questions
+                                         where q.TestId == t.Id
+                                         select new QuestionViewModel
+                                         {
+                                             Question = q,
+                                             Answers = (from a in TestsContext.Answers
+                                                        where a.QuestionId == q.Id
+                                                        select a).ToList()
+                                         }).ToList()
+                        }).First();
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e);
+            }
+            return Ok(test);
+        }
+
+        [HttpGet]
+        [Route("student/{id}")]
+        [Produces("application/json")]
+        public ActionResult<TestPassingModel> GetTest(int id)
         {
             TestPassingModel test = new TestPassingModel();
             try
@@ -126,30 +151,6 @@ namespace WebApiAttempt1.Controllers
             }
             return Ok(test);
         }
-
-
-        //запрос без фильтрации для отображения определенного количества тестов на одной конкретной странице
-        [HttpGet("{amount}/{pageNumber}")]
-        [Produces("application/json")]
-        public IQueryable<TestWithObjectSubject> GetParticularAmountOfTests(int amount, int pageNumber)
-        {
-            return (from t in TestsContext.Tests
-                    select new TestWithObjectSubject
-                    {
-                        Id = t.Id,
-                        Name = t.Name,
-                        DueDateTime = t.DueDateTime,
-                        EstimatedTime = t.EstimatedTime,
-                        QuestionsAmount = t.QuestionsAmount,
-                        MaxMark = t.MaxMark,
-                        IsOpen = t.IsOpen,
-                        CreationDate = t.CreationDate,
-                        SubjectObject = (from s in TestsContext.Subjects
-                                        where s.Id == t.SubjectId
-                                        select s).First()
-                    }).Skip(amount*pageNumber).Take(amount);
-        }
-
 
         //POST: api/Tests
         [HttpPost]
@@ -267,7 +268,7 @@ namespace WebApiAttempt1.Controllers
         }
 
         [HttpPut("{id}")]
-        public ActionResult Put(int id) //перегрузка метода Put(update), который открывает/закрывает   тест
+        public ActionResult Put(int id) //перегрузка метода Put(update), который открывает/закрывает тест
         {
             try { 
                 TestsContext.Tests.Find(id).IsOpen = TestsContext.Tests.Find(id).IsOpen == true ? false : true;
@@ -279,7 +280,6 @@ namespace WebApiAttempt1.Controllers
                 return BadRequest();
             }
         }
-
 
         // DELETE: api/ApiWithActions/5
         [HttpDelete("{id}")]
@@ -297,5 +297,46 @@ namespace WebApiAttempt1.Controllers
             }
         }
 
+
+
+
+        //запрос без фильтрации для отображения определенного количества тестов на одной конкретной странице
+        [HttpGet("{amount}/{pageNumber}")]
+        [Produces("application/json")]
+        public IQueryable<TestWithObjectSubject> GetParticularAmountOfTests(int amount, int pageNumber)
+        {
+            return (from t in TestsContext.Tests
+                    select new TestWithObjectSubject
+                    {
+                        Id = t.Id,
+                        Name = t.Name,
+                        DueDateTime = t.DueDateTime,
+                        EstimatedTime = t.EstimatedTime,
+                        QuestionsAmount = t.QuestionsAmount,
+                        MaxMark = t.MaxMark,
+                        IsOpen = t.IsOpen,
+                        CreationDate = t.CreationDate,
+                        SubjectObject = (from s in TestsContext.Subjects
+                                         where s.Id == t.SubjectId
+                                         select s).First()
+                    }).Skip(amount * pageNumber).Take(amount);
+        }
+
+        // GET: api/Tests
+        //[HttpGet]
+        //[Produces("application/json")]
+        //public List<SubjectsListViewModel> GetSubjects()
+        //{
+        //    return (from s in TestsContext.Subjects
+        //            select new SubjectsListViewModel
+        //            {
+        //                Id = s.Id,
+        //                SubjectTypeId = s.SubjectTypeId,
+        //                Name = s.Name,
+        //                Tests = (from t2 in TestsContext.Tests
+        //                         where t2.SubjectId == s.Id
+        //                         select t2).ToList()
+        //            }).ToList();
+        //}
     }
 }
