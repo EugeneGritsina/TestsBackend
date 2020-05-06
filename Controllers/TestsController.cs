@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.AspNetCore.Mvc;
+using WebApiAttempt1.DTO;
 using WebApiAttempt1.JSONmodels;
 using WebApiAttempt1.Models;
 using WebApiAttempt1.ViewModels;
@@ -44,14 +45,14 @@ namespace WebApiAttempt1.Controllers
 
         [HttpGet("{id}", Name = "Get")]
         [Produces("application/json")]
-        public ActionResult<TestPassingModel> Get(int id)
+        public ActionResult<TestForProfessorDTO> Get(int id)
         {
-            TestPassingModel test = new TestPassingModel();
+            TestForProfessorDTO test = new TestForProfessorDTO();
             try
             {
                 test = (from t in TestsContext.Tests
                         where t.Id == id
-                        select new TestPassingModel
+                        select new TestForProfessorDTO
                         {
                             Id = t.Id,
                             Name = t.Name,
@@ -66,7 +67,7 @@ namespace WebApiAttempt1.Controllers
                                              select s).First(),
                             Questions = (from q in TestsContext.Questions
                                          where q.TestId == t.Id
-                                         select new QuestionViewModel
+                                         select new QuestionWithAnswers
                                          {
                                              Question = q,
                                              Answers = (from a in TestsContext.Answers
@@ -85,19 +86,19 @@ namespace WebApiAttempt1.Controllers
         [HttpGet]
         [Route("student/{id}")]
         [Produces("application/json")]
-        public ActionResult<TestPassingModel> GetTest(int id)
+        public ActionResult<TestForProfessorDTO> GetTest(int id)
         {
-            TestPassingModel test = new TestPassingModel();
+            TestForStudentDTO test = new TestForStudentDTO();
             try
             {
                 test = (from t in TestsContext.Tests
                         where t.Id == id
-                        select new TestPassingModel
+                        select new TestForStudentDTO
                         {
                             Id = t.Id,
                             Name = t.Name,
                             DueDateTime = t.DueDateTime,
-                            EstimatedTime = new DateTime(1970,1,1, t.EstimatedTime.Value.Hours, t.EstimatedTime.Value.Minutes, t.EstimatedTime.Value.Seconds),
+                            EstimatedTime = $"{t.EstimatedTime.Value.Hours}:{t.EstimatedTime.Value.Minutes}",
                             QuestionsAmount = t.QuestionsAmount,
                             MaxMark = t.MaxMark,
                             IsOpen = t.IsOpen,
@@ -107,23 +108,28 @@ namespace WebApiAttempt1.Controllers
                                             select s).First(),
                             Questions = (from q in TestsContext.Questions
                                         where q.TestId == t.Id
-                                        select new QuestionViewModel
+                                        select new QuestionWithAnswersWithoutStatus
                                         {
                                             Question = q,
                                             Answers = (from a in TestsContext.Answers
                                                         where a.QuestionId == q.Id
-                                                        select a).ToList()
+                                                        select new AnswerWithoutStatus { 
+                                                            Id = a.Id,
+                                                            QuestionId = a.QuestionId,
+                                                            Value = a.Value
+                                                        }).ToList()
                                         }).ToList()
                         }).First();
+
                 #region [REPLACING_FULL_LIST_OF_QUESTIONS_BY_AMOUNT_OF_QUESTIONS_USING_MAX_MARK]
-                List<QuestionViewModel> questions = new List<QuestionViewModel>();
+                List<QuestionWithAnswersWithoutStatus> questions = new List<QuestionWithAnswersWithoutStatus>();
                 double howMuchPointsLeft = test.MaxMark;
                 Random random = new Random();
                 try
                 {
                     while (howMuchPointsLeft != 0)
                     {
-                        QuestionViewModel question;
+                        QuestionWithAnswersWithoutStatus question;
                         while (true)
                         {
                             question = test.Questions[random.Next(0, test.Questions.Count)]; //извлечение произвольного вопроса из списка вопросов для теста
@@ -152,9 +158,9 @@ namespace WebApiAttempt1.Controllers
             return Ok(test);
         }
 
-        //POST: api/Tests
+        //POST: api/tests
         [HttpPost]
-        public ActionResult Post(TestPassingModel test)
+        public ActionResult Post(TestForProfessorDTO test)
         {
             if (test == null)
                 return BadRequest();
@@ -208,8 +214,43 @@ namespace WebApiAttempt1.Controllers
             }
         }
 
+
+        [HttpPost]
+        [Route("student")]
+        public ActionResult CheckAnswers(TestForProfessorDTO testSentByUser)
+        {
+            if (testSentByUser == null)
+                return BadRequest();
+            try
+            {
+                float gainedMark = 0;
+
+                List<Answer> correctAnswers = new List<Answer>();
+
+                foreach (QuestionWithAnswers q in testSentByUser.Questions)
+                {
+                    List<Answer> correctAnswersFor_q = new List<Answer>();
+                    correctAnswersFor_q = (from a in TestsContext.Answers
+                                           where a.QuestionId == q.Question.Id && a.Status == true
+                                           select a).ToList();
+
+                    if (correctAnswers == q.Answers)
+                        gainedMark += (float)q.Question.Points;
+
+                    correctAnswers.AddRange(correctAnswersFor_q);
+                }
+
+
+                return Ok();
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
+
         [HttpPut]
-        public ActionResult Put([FromBody]TestPassingModel test)
+        public ActionResult Put([FromBody]TestForProfessorDTO test)
         {
             try
             {
@@ -267,8 +308,9 @@ namespace WebApiAttempt1.Controllers
             }
         }
 
+        //перегрузка метода Put(update), который открывает/закрывает тест
         [HttpPut("{id}")]
-        public ActionResult Put(int id) //перегрузка метода Put(update), который открывает/закрывает тест
+        public ActionResult Put(int id)
         {
             try { 
                 TestsContext.Tests.Find(id).IsOpen = TestsContext.Tests.Find(id).IsOpen == true ? false : true;
@@ -281,7 +323,6 @@ namespace WebApiAttempt1.Controllers
             }
         }
 
-        // DELETE: api/ApiWithActions/5
         [HttpDelete("{id}")]
         public ActionResult Delete(int id)
         {

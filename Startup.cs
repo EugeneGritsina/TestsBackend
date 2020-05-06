@@ -41,6 +41,7 @@ namespace WebApiAttempt1
             }
 
             app.UseStaticFiles();
+            app.UseDefaultFiles();
             app.UseRouting();
 
             app.UseCors(builder =>
