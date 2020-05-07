@@ -1,9 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using WebApiAttempt1.Models;
-using WebApiAttempt1.ViewModels;
 
 namespace WebApiAttempt1.DTO
 {
@@ -28,10 +25,14 @@ namespace WebApiAttempt1.DTO
         public string Value { get; set; }
     }
 
-    public class QuestionWithAnswersWithoutStatus
+    public class QuestionWithAnswersWithoutStatus : Question
     {
-        public Question Question { get; set; }
         public List<AnswerWithoutStatus> Answers { get; set; }
+
+        public QuestionWithAnswersWithoutStatus()
+        {
+            Answers = new List<AnswerWithoutStatus>();
+        }
     }
 
 }

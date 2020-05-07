@@ -16,7 +16,7 @@ namespace WebApiAttempt1.Models
         public string Description { get; set; }
 
         [Column(name: "type")]
-        public bool Type { get; set; }
+        public bool QuestionType { get; set; }
 
         [Column(name: "points")]
         public double Points { get; set; }

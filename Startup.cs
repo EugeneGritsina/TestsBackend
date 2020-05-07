@@ -46,7 +46,7 @@ namespace WebApiAttempt1
             options.DefaultFileNames.Add("index.html");
 
             app.UseStaticFiles();
-            app.UseDefaultFiles();
+            app.UseDefaultFiles(options);
             app.UseRouting();
 
             app.UseCors(builder =>

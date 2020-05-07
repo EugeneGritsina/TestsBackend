@@ -69,7 +69,11 @@ namespace WebApiAttempt1.Controllers
                                          where q.TestId == t.Id
                                          select new QuestionWithAnswers
                                          {
-                                             Question = q,
+                                             Id = q.Id,
+                                             TestId = q.TestId,
+                                             Description = q.Description,
+                                             QuestionType = q.QuestionType,
+                                             Points = q.Points,
                                              Answers = (from a in TestsContext.Answers
                                                         where a.QuestionId == q.Id
                                                         select a).ToList()
@@ -86,7 +90,7 @@ namespace WebApiAttempt1.Controllers
         [HttpGet]
         [Route("student/{id}")]
         [Produces("application/json")]
-        public ActionResult<TestForStudentDTO> GetTest(int id)
+        public ActionResult<TestForStudentDTO> SendTestToCompleteToStudent(int id)
         {
             TestForStudentDTO test = new TestForStudentDTO();
             try
@@ -110,7 +114,11 @@ namespace WebApiAttempt1.Controllers
                                         where q.TestId == t.Id
                                         select new QuestionWithAnswersWithoutStatus
                                         {
-                                            Question = q,
+                                            Id = q.Id,
+                                            TestId = q.TestId,
+                                            Description = q.Description,
+                                            QuestionType = q.QuestionType,
+                                            Points = q.Points,
                                             Answers = (from a in TestsContext.Answers
                                                         where a.QuestionId == q.Id
                                                         select new AnswerWithoutStatus { 
@@ -133,13 +141,13 @@ namespace WebApiAttempt1.Controllers
                         while (true)
                         {
                             question = test.Questions[random.Next(0, test.Questions.Count)]; //извлечение произвольного вопроса из списка вопросов для теста
-                            if (question.Question.Points <= howMuchPointsLeft)
+                            if (question.Points <= howMuchPointsLeft)
                                 break;
                         }
                         if (!questions.Contains(question))
                         {
                             questions.Add(question);
-                            howMuchPointsLeft -= question.Question.Points;
+                            howMuchPointsLeft -= question.Points;
                         }
                     }
                     test.Questions = questions;
@@ -190,12 +198,12 @@ namespace WebApiAttempt1.Controllers
 
                 foreach (var q in test.Questions)                                           // чтобы дальше их обновленную версию добавить из новой модельки теста
                 {
-                    q.Question.TestId = testToCreate.Id;
-                    q.Question.Id = 0;                                                          // в БД уже может быть вопрос с таким ID, поэтому возникнет ошибка
-                    TestsContext.Questions.Add(q.Question);                                     // для решения проблемы ID зануляется, вопрос добавляется в БД, а всем связанным ответам
+                    q.TestId = testToCreate.Id;
+                    q.Id = 0;                                                          // в БД уже может быть вопрос с таким ID, поэтому возникнет ошибка
+                    TestsContext.Questions.Add(q);                                     // для решения проблемы ID зануляется, вопрос добавляется в БД, а всем связанным ответам
                     TestsContext.SaveChanges();
                     foreach (var a in q.Answers)                                                // присваивается новое значение ID, выданное БД
-                        a.QuestionId = q.Question.Id;
+                        a.QuestionId = q.Id;
                 }
 
                 foreach (var q in test.Questions)                                           // и после этого добавляем также ответы
@@ -227,7 +235,11 @@ namespace WebApiAttempt1.Controllers
                                          where q.TestId == t.Id
                                          select new QuestionWithAnswers
                                          {
-                                             Question = q,
+                                             Id = q.Id,
+                                             TestId = q.TestId,
+                                             Description = q.Description,
+                                             QuestionType = q.QuestionType,
+                                             Points = q.Points,
                                              Answers = (from a in TestsContext.Answers
                                                         where a.QuestionId == q.Id
                                                         select a).ToList()
@@ -259,11 +271,11 @@ namespace WebApiAttempt1.Controllers
                 {
                     List<Answer> correctAnswersFor_q = new List<Answer>();
                     correctAnswersFor_q = (from a in TestsContext.Answers
-                                           where a.QuestionId == q.Question.Id && a.Status == true
+                                           where a.QuestionId == q.Id && a.Status == true
                                            select a).ToList();
 
                     if (correctAnswers == q.Answers)
-                        gainedMark += (float)q.Question.Points;
+                        gainedMark += (float)q.Points;
 
                     correctAnswers.AddRange(correctAnswersFor_q);
                 }
@@ -315,11 +327,11 @@ namespace WebApiAttempt1.Controllers
 
                 foreach (var q in test.Questions)                                           // чтобы дальше их обновленную версию добавить из новой модельки теста
                 {
-                    q.Question.Id = 0;                                                          // в БД уже может быть вопрос с таким ID, поэтому возникнет ошибка
-                    TestsContext.Questions.Add(q.Question);                                     // для решения проблемы ID зануляется, вопрос добавляется в БД, а всем связанным ответам
+                    q.Id = 0;                                                          // в БД уже может быть вопрос с таким ID, поэтому возникнет ошибка
+                    TestsContext.Questions.Add(q);                                     // для решения проблемы ID зануляется, вопрос добавляется в БД, а всем связанным ответам
                     TestsContext.SaveChanges();
                     foreach (var a in q.Answers)                                                // присваивается новое значение ID, выданное БД
-                        a.QuestionId = q.Question.Id;
+                        a.QuestionId = q.Id;
                 }
 
                 foreach (var q in test.Questions)                                           // и после этого добавляем также ответы
