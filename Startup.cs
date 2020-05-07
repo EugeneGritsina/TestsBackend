@@ -40,6 +40,11 @@ namespace WebApiAttempt1
                 app.UseDeveloperExceptionPage();
             }
 
+
+            DefaultFilesOptions options = new DefaultFilesOptions();
+            options.DefaultFileNames.Clear();
+            options.DefaultFileNames.Add("index.html");
+
             app.UseStaticFiles();
             app.UseDefaultFiles();
             app.UseRouting();
