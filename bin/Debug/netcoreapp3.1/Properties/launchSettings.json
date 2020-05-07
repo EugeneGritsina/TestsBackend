@@ -11,7 +11,6 @@
     "IIS Express": {
       "commandName": "IISExpress",
       "workingDirectory": "C:\\projects\\TestsBackend",
-      "launchBrowser": true,
       "launchUrl": "index.html",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"

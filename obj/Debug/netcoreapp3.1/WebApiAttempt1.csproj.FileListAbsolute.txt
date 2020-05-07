@@ -250,3 +250,4 @@ C:\projects\TestsBackend\obj\Debug\netcoreapp3.1\staticwebassets\WebApiAttempt1.
 C:\projects\TestsBackend\obj\Debug\netcoreapp3.1\WebApiAttempt1.dll
 C:\projects\TestsBackend\obj\Debug\netcoreapp3.1\WebApiAttempt1.pdb
 C:\projects\TestsBackend\obj\Debug\netcoreapp3.1\WebApiAttempt1.genruntimeconfig.cache
+C:\projects\TestsBackend\obj\Debug\netcoreapp3.1\WebApiAttempt1.csprojAssemblyReference.cache

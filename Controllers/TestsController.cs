@@ -32,7 +32,7 @@ namespace WebApiAttempt1.Controllers
                         Id = t.Id,
                         Name = t.Name,
                         DueDateTime = t.DueDateTime,
-                        EstimatedTime = t.EstimatedTime,
+                        EstimatedTime = $"{t.EstimatedTime.Value.Hours}:{t.EstimatedTime.Value.Minutes}",
                         QuestionsAmount = t.QuestionsAmount,
                         MaxMark = t.MaxMark,
                         IsOpen = t.IsOpen,
@@ -57,7 +57,7 @@ namespace WebApiAttempt1.Controllers
                             Id = t.Id,
                             Name = t.Name,
                             DueDateTime = t.DueDateTime,
-                            EstimatedTime = new DateTime(1970, 1, 1, t.EstimatedTime.Value.Hours, t.EstimatedTime.Value.Minutes, t.EstimatedTime.Value.Seconds),
+                            EstimatedTime = $"{t.EstimatedTime.Value.Hours}:{t.EstimatedTime.Value.Minutes}",
                             QuestionsAmount = t.QuestionsAmount,
                             MaxMark = t.MaxMark,
                             IsOpen = t.IsOpen,
@@ -86,7 +86,7 @@ namespace WebApiAttempt1.Controllers
         [HttpGet]
         [Route("student/{id}")]
         [Produces("application/json")]
-        public ActionResult<TestForProfessorDTO> GetTest(int id)
+        public ActionResult<TestForStudentDTO> GetTest(int id)
         {
             TestForStudentDTO test = new TestForStudentDTO();
             try
@@ -158,7 +158,6 @@ namespace WebApiAttempt1.Controllers
             return Ok(test);
         }
 
-        //POST: api/tests
         [HttpPost]
         public ActionResult Post(TestForProfessorDTO test)
         {
@@ -173,12 +172,13 @@ namespace WebApiAttempt1.Controllers
 
             try
             {
+                string[] splittedEstimatedTime = test.EstimatedTime.Split(':');
                 // задаем поля информации о тесте
                 Test testToCreate = new Test() {
                     Id = 0,
-                    Name = test.Name,                             
+                    Name = test.Name,
                     DueDateTime = test.DueDateTime,
-                    EstimatedTime = new TimeSpan(test.EstimatedTime.Value.Hour, test.EstimatedTime.Value.Minute, test.EstimatedTime.Value.Second),
+                    EstimatedTime = new TimeSpan(int.Parse(splittedEstimatedTime[0]),int.Parse(splittedEstimatedTime[1]), 0),
                     QuestionsAmount = test.QuestionsAmount,
                     MaxMark = test.MaxMark,
                     IsOpen = test.IsOpen,
@@ -206,7 +206,35 @@ namespace WebApiAttempt1.Controllers
                 }
 
                 TestsContext.SaveChanges();
-                return Ok(testToCreate);
+
+                // в принципе, без этого запроса можно было бы и обойтись, я думаю, просто можно было переприсвоить id самого теста, а что там с остальными id -- вроде, не важно
+                test = (from t in TestsContext.Tests
+                        where t.Id == testToCreate.Id
+                        select new TestForProfessorDTO
+                        {
+                            Id = t.Id,
+                            Name = t.Name,
+                            DueDateTime = t.DueDateTime,
+                            EstimatedTime = $"{t.EstimatedTime.Value.Hours}:{t.EstimatedTime.Value.Minutes}",
+                            QuestionsAmount = t.QuestionsAmount,
+                            MaxMark = t.MaxMark,
+                            IsOpen = t.IsOpen,
+                            CreationDate = t.CreationDate,
+                            SubjectObject = (from s in TestsContext.Subjects
+                                             where s.Id == t.SubjectId
+                                             select s).First(),
+                            Questions = (from q in TestsContext.Questions
+                                         where q.TestId == t.Id
+                                         select new QuestionWithAnswers
+                                         {
+                                             Question = q,
+                                             Answers = (from a in TestsContext.Answers
+                                                        where a.QuestionId == q.Id
+                                                        select a).ToList()
+                                         }).ToList()
+                        }).First();
+
+                return Ok(test);
             }
             catch (Exception e)
             {
@@ -254,11 +282,13 @@ namespace WebApiAttempt1.Controllers
         {
             try
             {
+                string[] splittedEstimatedTime = test.EstimatedTime.Split(':');
+
                 Test testToUpdate = TestsContext.Tests.Find(test.Id);       // берем тест, который нужно обновить
 
                 testToUpdate.Name = test.Name;                              // задаем поля информации о тесте
                 testToUpdate.DueDateTime = test.DueDateTime;
-                testToUpdate.EstimatedTime = new TimeSpan(test.EstimatedTime.Value.Hour, test.EstimatedTime.Value.Minute, test.EstimatedTime.Value.Second);
+                testToUpdate.EstimatedTime = new TimeSpan(int.Parse(splittedEstimatedTime[0]), int.Parse(splittedEstimatedTime[1]), 0);
                 testToUpdate.QuestionsAmount = test.QuestionsAmount;
                 testToUpdate.MaxMark = test.MaxMark;
                 testToUpdate.IsOpen = test.IsOpen;
@@ -352,7 +382,7 @@ namespace WebApiAttempt1.Controllers
                         Id = t.Id,
                         Name = t.Name,
                         DueDateTime = t.DueDateTime,
-                        EstimatedTime = t.EstimatedTime,
+                        EstimatedTime = $"{t.EstimatedTime.Value.Hours}:{t.EstimatedTime.Value.Minutes}",
                         QuestionsAmount = t.QuestionsAmount,
                         MaxMark = t.MaxMark,
                         IsOpen = t.IsOpen,
