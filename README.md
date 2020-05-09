@@ -1,6 +1,7 @@
 # TestsBackend version 0.3
 
 ***updates***:
+
 *ver 0.3*
 - Объект вопроса теперь содержит массив ответов, он не возвращается отдельным объектом, как было раньше
 
@@ -96,7 +97,6 @@ JSON Модель:
                 {
                     "id": 11,
                     "questionId": 9,
-                    "status": true,
                     "value": "MyClass"
                 },
                 {
@@ -108,7 +108,6 @@ JSON Модель:
                 {
                     "id": 13,
                     "questionId": 9,
-                    "status": false,
                     "value": "int"
                 }
             ]
@@ -126,25 +125,21 @@ JSON Модель:
                     {
                         "id": 14,
                         "questionId": 10,
-                        "status": true,
                         "value": "int"
                     },
                     {
                         "id": 15,
                         "questionId": 10,
-                        "status": false,
                         "value": "object"
                     },
                     {
                         "id": 16,
                         "questionId": 10,
-                        "status": true,
                         "value": "char"
                     },
                     {
                         "id": 17,
                         "questionId": 10,
-                        "status": true,
                         "value": "double"
                     }
                 ]
@@ -156,7 +151,10 @@ JSON Модель:
 
 ## 3) GET TEST PROFESSOR: Тест целиком (со всеми вопросами) для страницы редактирования уже существующего теста. 
 
-JSON формат тот же, что и у запроса 2.
+JSON формат тот же, что и у запроса 2, c добавлением поля статуса в объект ответа
+```
+    "status": true
+```
 
 **GET** запрос на url: 
 http://testsbsu.azurewebsites.net/api/tests/1 ,
