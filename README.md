@@ -1,6 +1,8 @@
-# TestsBackend version 0.2
+# TestsBackend version 0.3
 
 ***updates***:
+*ver 0.3*
+- Объект вопроса теперь содержит массив ответов, он не возвращается отдельным объектом, как было раньше
 *ver 0.2*
 - estimatedTime теперь везде string: и в принимаемых, в ввозвращаемых объектах
 - post запрос возвращает весь DTO теста, а не только связанную с ним информацию
@@ -87,9 +89,8 @@ JSON Модель:
                 "testId": 2,
                 "description": "Выберите ссылочные типы:",
                 "type": true,
-                "points": 5
-            },
-            "answers": [
+                "points": 5,
+                "answers": [
                 {
                     "id": 11,
                     "questionId": 9,
@@ -109,6 +110,8 @@ JSON Модель:
                     "value": "int"
                 }
             ]
+            },
+            
         },
         {
             "question": {
@@ -116,34 +119,34 @@ JSON Модель:
                 "testId": 2,
                 "description": "Выберите типы значения:",
                 "type": true,
-                "points": 5
-            },
-            "answers": [
-                {
-                    "id": 14,
-                    "questionId": 10,
-                    "status": true,
-                    "value": "int"
-                },
-                {
-                    "id": 15,
-                    "questionId": 10,
-                    "status": false,
-                    "value": "object"
-                },
-                {
-                    "id": 16,
-                    "questionId": 10,
-                    "status": true,
-                    "value": "char"
-                },
-                {
-                    "id": 17,
-                    "questionId": 10,
-                    "status": true,
-                    "value": "double"
-                }
-            ]
+                "points": 5,
+                "answers": [
+                    {
+                        "id": 14,
+                        "questionId": 10,
+                        "status": true,
+                        "value": "int"
+                    },
+                    {
+                        "id": 15,
+                        "questionId": 10,
+                        "status": false,
+                        "value": "object"
+                    },
+                    {
+                        "id": 16,
+                        "questionId": 10,
+                        "status": true,
+                        "value": "char"
+                    },
+                    {
+                        "id": 17,
+                        "questionId": 10,
+                        "status": true,
+                        "value": "double"
+                    }
+                ]
+            }
         }
     ]
 }
