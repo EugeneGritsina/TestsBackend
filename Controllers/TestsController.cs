@@ -21,7 +21,6 @@ namespace WebApiAttempt1.Controllers
             TestsContext = testsContext;
         }
 
-
         [HttpGet]
         [Produces("application/json")]
         public IQueryable<TestWithObjectSubject> Get()
@@ -70,7 +69,6 @@ namespace WebApiAttempt1.Controllers
                                          select new QuestionWithAnswers
                                          {
                                              Id = q.Id,
-                                             TestId = q.TestId,
                                              Description = q.Description,
                                              QuestionType = q.QuestionType,
                                              Points = q.Points,
@@ -196,24 +194,29 @@ namespace WebApiAttempt1.Controllers
                 TestsContext.Tests.Add(testToCreate);
                 TestsContext.SaveChanges();
 
-                foreach (var q in test.Questions)                                           // чтобы дальше их обновленную версию добавить из новой модельки теста
+                if (test.Questions != null) //если не были переданы вопросы, не добавлять их в бд.
                 {
-                    q.TestId = testToCreate.Id;
-                    q.Id = 0;                                                          // в БД уже может быть вопрос с таким ID, поэтому возникнет ошибка
-                    TestsContext.Questions.Add(q);                                     // для решения проблемы ID зануляется, вопрос добавляется в БД, а всем связанным ответам
+
+                    foreach (var q in test.Questions)                                           // чтобы дальше их обновленную версию добавить из новой модельки теста
+                    {
+                        q.TestId = testToCreate.Id;
+                        q.Id = 0;                                                          // в БД уже может быть вопрос с таким ID, поэтому возникнет ошибка
+                        TestsContext.Questions.Add(q);                                     // для решения проблемы ID зануляется, вопрос добавляется в БД, а всем связанным ответам
+                        TestsContext.SaveChanges();
+                        foreach (var a in q.Answers)                                                // присваивается новое значение ID, выданное БД
+                            a.QuestionId = q.Id;
+                    }
+
+                    foreach (var q in test.Questions)                                           // и после этого добавляем также ответы
+                    {
+                        if (q.Answers != null) { 
+                            foreach (var a in q.Answers)
+                                a.Id = 0;
+                            TestsContext.Answers.AddRange(q.Answers);
+                        }
+                    }
                     TestsContext.SaveChanges();
-                    foreach (var a in q.Answers)                                                // присваивается новое значение ID, выданное БД
-                        a.QuestionId = q.Id;
                 }
-
-                foreach (var q in test.Questions)                                           // и после этого добавляем также ответы
-                {
-                    foreach (var a in q.Answers)
-                        a.Id = 0;
-                    TestsContext.Answers.AddRange(q.Answers);
-                }
-
-                TestsContext.SaveChanges();
 
                 // в принципе, без этого запроса можно было бы и обойтись, я думаю, просто можно было переприсвоить id самого теста, а что там с остальными id -- вроде, не важно
                 test = (from t in TestsContext.Tests
@@ -253,7 +256,6 @@ namespace WebApiAttempt1.Controllers
                 return BadRequest(e.Message);
             }
         }
-
 
         [HttpPost]
         [Route("student")]
@@ -304,27 +306,13 @@ namespace WebApiAttempt1.Controllers
                 testToUpdate.QuestionsAmount = test.QuestionsAmount;
                 testToUpdate.MaxMark = test.MaxMark;
                 testToUpdate.IsOpen = test.IsOpen;
+                                
+                IQueryable<Question> QuestionsConnectedWithTest = from q in TestsContext.Questions      
+                                                                       where q.TestId == test.Id
+                                                                       select q;
 
-                int[] IdsOfQuestionsConnectedWithTest = (from q in TestsContext.Questions      //сохраняем Id вопросов, которые связаны с тестом, чтобы потом по этим id найти ответы, связанные с нужными вопросами 
-                                                         where q.TestId == test.Id
-                                                         select q.Id).ToArray();
-
-                List<Answer> AnswersConnectedWithTest = new List<Answer>();                 //создаем и инициализируем список всех ответов, связанных с тестом
-
-                for (int i = 0; i < IdsOfQuestionsConnectedWithTest.Length; i++)
-                {
-                    TestsContext.Answers.RemoveRange((from a in TestsContext.Answers
-                                                      where a.QuestionId == IdsOfQuestionsConnectedWithTest[i]
-                                                      select a).ToList());
-                }
-
-                TestsContext.Answers.RemoveRange(AnswersConnectedWithTest);                 //очищаем список всех ответов от нужных ответов
-
-                var QuestionsConnectedWithTest = from q in TestsContext.Questions
-                                                 where q.TestId == test.Id
-                                                 select q;
-                TestsContext.Questions.RemoveRange(QuestionsConnectedWithTest);             // стираем все вопросы...
-
+                TestsContext.Questions.RemoveRange(QuestionsConnectedWithTest);             // удаляем все старые вопросы, связанные с тестом
+                
                 foreach (var q in test.Questions)                                           // чтобы дальше их обновленную версию добавить из новой модельки теста
                 {
                     q.Id = 0;                                                          // в БД уже может быть вопрос с таким ID, поэтому возникнет ошибка
@@ -350,14 +338,14 @@ namespace WebApiAttempt1.Controllers
             }
         }
 
-        //перегрузка метода Put(update), который открывает/закрывает тест
-        [HttpPut("{id}")]
-        public ActionResult Put(int id)
+        // метод открывает/закрывает тест
+        [HttpPatch("{id}")]
+        public ActionResult CloseOrOpenTest(int id)
         {
             try { 
                 TestsContext.Tests.Find(id).IsOpen = TestsContext.Tests.Find(id).IsOpen == true ? false : true;
                 TestsContext.SaveChanges();
-                return Ok(id);
+                return Ok($"State of test with id: {id} was changed.");
             }
             catch
             {

@@ -1,14 +1,10 @@
-﻿using Microsoft.OData.Edm;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using WebApiAttempt1.DTO;
 
 namespace WebApiAttempt1.Models
 {
-    public class SubjectsListViewModel
+    public class SubjectsListViewModel : Subject
     {
-        public int Id { get; set; }
-        public string Name { get; set; }
-        public int SubjectTypeId { get; set; }
-        public Date CreationDate { get; set; }
-        public List<Test> Tests { get; set; }
+        public List<TestDTO> Tests { get; set; }
     }
 }

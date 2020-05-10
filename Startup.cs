@@ -5,13 +5,6 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Hosting;
-using Microsoft.AspNet.OData.Extensions;
-using Microsoft.AspNetCore.Routing;
-using System;
-using Microsoft.OData;
-using Microsoft.OData.Edm;
-using Microsoft.AspNet.OData.Builder;
-using WebApiAttempt1.ViewModels;
 
 namespace WebApiAttempt1
 {
@@ -27,10 +20,7 @@ namespace WebApiAttempt1
             string connection = configuration.GetConnectionString("TestsBSUConnection");
             services.AddDbContext<TestsContext>(options => options.UseSqlServer(connection));
             services.AddControllers();
-            //services.AddOData();
-            //services.AddControllers(mvcOptions =>
-            //    mvcOptions.EnableEndpointRouting = false);
-            //services.AddMvc();
+            services.AddMvc();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
@@ -40,13 +30,7 @@ namespace WebApiAttempt1
                 app.UseDeveloperExceptionPage();
             }
 
-
-            DefaultFilesOptions options = new DefaultFilesOptions();
-            options.DefaultFileNames.Clear();
-            options.DefaultFileNames.Add("index.html");
-
             app.UseStaticFiles();
-            app.UseDefaultFiles(options);
             app.UseRouting();
 
             app.UseCors(builder =>
@@ -60,20 +44,6 @@ namespace WebApiAttempt1
             {
                 endpoints.MapControllers();
             });
-
-            //app.UseMvc(routeBuilder =>
-            //{
-            //    routeBuilder.Select().Filter().OrderBy();
-            //    routeBuilder.MapODataServiceRoute("tests", "api", GetEdmModel());
-            //});
         }
-
-        //private IEdmModel GetEdmModel()
-        //{
-        //    var odataBuilder = new ODataConventionModelBuilder();
-        //    odataBuilder.EntitySet<TestWithObjectSubject>("Tests");
-
-        //    return odataBuilder.GetEdmModel();
-        //}
     }
 }

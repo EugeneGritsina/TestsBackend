@@ -1,12 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-
-namespace WebApiAttempt1.DTO
+﻿namespace WebApiAttempt1.DTO
 {
-    public class CompletedTestDTO
+    public class CompletedTestDTO : TestDTO
     {
-
+        public int GainedMark { get; set; }
     }
 }
