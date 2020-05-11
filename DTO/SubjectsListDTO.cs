@@ -3,7 +3,7 @@ using WebApiAttempt1.DTO;
 
 namespace WebApiAttempt1.Models
 {
-    public class SubjectsListViewModel : Subject
+    public class SubjectsListDTO : Subject
     {
         public List<TestDTO> Tests { get; set; }
     }

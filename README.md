@@ -1,6 +1,10 @@
-# TestsBackend version 0.3
+# TestsBackend version 0.4
 
 ***updates***:
+
+*ver 0.4*
+ - Метод getSubjects (пункт 7) + устранение неисправности, связанной с добавлением теста
+ - Обновление списка моделей внизу документации: теперь это не модели, которые находятся в БД, а модели для ОТПРАВКИ в БД
 
 *ver 0.3*
 - Объект вопроса теперь содержит массив ответов, он не возвращается отдельным объектом, как было раньше
@@ -177,32 +181,41 @@ http://testsbsu.azurewebsites.net/api/tests/1
 http://testsbsu.azurewebsites.net/api/tests/1
 где 1 - id нужного теста
 
-## БД:
+## 7) GET SUBJECTS: возврат списка предметов с списком тестов в каждом объекте предмета.
 
-### Модель Test:
+**GET** запрос на url: 
+http://testsbsu.azurewebsites.net/api/SUBJECTS
+
+## МОДЕЛИ ДЛЯ ОТПРАВКИ В БД:
+
+### Отправка преподавателем при создании, обновлении теста
+
+#### Модель Test:
 1) int id
 2) Subject subjectObject : *объект предмета целиком*
 3) string Name
-4) DateTime (nullable) dueDateTime : *дата и время закрытия возможности прохождения теста*
-5) DateTime (nullable) estimatedTime : *время для прохождения теста*
+4) string (nullable) dueDateTime : [формат: '"2007-01-01T00:00:00"'] - *дата и время закрытия возможности прохождения теста*
+5) string (nullable) estimatedTime : [формат: '"00:00"]' - *время для прохождения теста*
 6) int questionsAmount : *количество вопросов, которое должно показываться у студента для одного теста. ПОКА НЕ ИСПОЛЬЗОВАЛ*
 7) int maxMark : *максимальный балл для прохождения теста. ВАЖНО: баллы добавленных вопросов можно сложить так, чтобы набрать 10 баллов. Иначе тест просто не вернется.*
 8) bool isOpen : *открыта или закрыта возможность прохождения теста*
-9) DateTime creationDate
+9) string creationDate : [формат: '"2007-01-01T00:00:00"']
+10) List<Question> questions : *список объектов вопросов, содержащих ответы*
 
-### Модель Subject
+#### Модель Subject
 1) int id
 2) string Name
 3) int subjectTypeId : *тип предмета (лекция, семинар...).*
 
-### Модель Question
+#### Модель Question
 1) int id
 2) int testId
 3) string description : *тут и нужно писать сам вопрос.*
 4) bool type : true - *тест с выбором варианта ответа, false - ввод ответа вручную.*
 5) double points : *количество баллов за правильный ответ на вопрос.*
+6) List<Answer> answers : *список ответов*
 
-### Модель Answer
+#### Модель Answer
 1) int id
 2) int questionId
 3) bool status : *true - правильный ответ, false - неправильный*

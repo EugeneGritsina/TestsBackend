@@ -257,40 +257,6 @@ namespace WebApiAttempt1.Controllers
             }
         }
 
-        [HttpPost]
-        [Route("student")]
-        public ActionResult CheckAnswers(TestForProfessorDTO testSentByUser)
-        {
-            if (testSentByUser == null)
-                return BadRequest();
-            try
-            {
-                float gainedMark = 0;
-
-                List<Answer> correctAnswers = new List<Answer>();
-
-                foreach (QuestionWithAnswers q in testSentByUser.Questions)
-                {
-                    List<Answer> correctAnswersFor_q = new List<Answer>();
-                    correctAnswersFor_q = (from a in TestsContext.Answers
-                                           where a.QuestionId == q.Id && a.Status == true
-                                           select a).ToList();
-
-                    if (correctAnswers == q.Answers)
-                        gainedMark += (float)q.Points;
-
-                    correctAnswers.AddRange(correctAnswersFor_q);
-                }
-
-
-                return Ok();
-            }
-            catch (Exception e)
-            {
-                return BadRequest(e.Message);
-            }
-        }
-
         [HttpPut]
         public ActionResult Put([FromBody]TestForProfessorDTO test)
         {
@@ -370,6 +336,39 @@ namespace WebApiAttempt1.Controllers
 
 
 
+        [HttpPost]
+        [Route("student")]
+        public ActionResult CheckAnswers(TestForProfessorDTO testSentByUser)
+        {
+            if (testSentByUser == null)
+                return BadRequest();
+            try
+            {
+                float gainedMark = 0;
+
+                List<Answer> correctAnswers = new List<Answer>();
+
+                foreach (QuestionWithAnswers q in testSentByUser.Questions)
+                {
+                    List<Answer> correctAnswersFor_q = new List<Answer>();
+                    correctAnswersFor_q = (from a in TestsContext.Answers
+                                           where a.QuestionId == q.Id && a.Status == true
+                                           select a).ToList();
+
+                    if (correctAnswers == q.Answers)
+                        gainedMark += (float)q.Points;
+
+                    correctAnswers.AddRange(correctAnswersFor_q);
+                }
+
+
+                return Ok();
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
 
         //запрос без фильтрации для отображения определенного количества тестов на одной конкретной странице
         [HttpGet("{amount}/{pageNumber}")]
@@ -393,21 +392,6 @@ namespace WebApiAttempt1.Controllers
                     }).Skip(amount * pageNumber).Take(amount);
         }
 
-        // GET: api/Tests
-        //[HttpGet]
-        //[Produces("application/json")]
-        //public List<SubjectsListViewModel> GetSubjects()
-        //{
-        //    return (from s in TestsContext.Subjects
-        //            select new SubjectsListViewModel
-        //            {
-        //                Id = s.Id,
-        //                SubjectTypeId = s.SubjectTypeId,
-        //                Name = s.Name,
-        //                Tests = (from t2 in TestsContext.Tests
-        //                         where t2.SubjectId == s.Id
-        //                         select t2).ToList()
-        //            }).ToList();
-        //}
+       
     }
 }
