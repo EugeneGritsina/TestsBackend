@@ -21,6 +21,10 @@ namespace WebApiAttempt1
             services.AddDbContext<TestsContext>(options => options.UseSqlServer(connection));
             services.AddControllers();
             services.AddMvc();
+            services.AddSwaggerGen(c =>
+            {
+                c.SwaggerDoc("v1", new Microsoft.OpenApi.Models.OpenApiInfo { Title = "TestsBSU API", Version = "v1" });
+            });
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
@@ -32,6 +36,13 @@ namespace WebApiAttempt1
 
             app.UseStaticFiles();
             app.UseRouting();
+
+            app.UseSwagger();
+            app.UseSwaggerUI(x =>
+           {
+               x.SwaggerEndpoint("/swagger/v1/swagger.json", "TestsBSU API");
+               x.RoutePrefix = "swagger";
+           });
 
             app.UseCors(builder =>
             {
