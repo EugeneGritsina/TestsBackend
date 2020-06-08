@@ -1,6 +1,9 @@
-# TestsBackend version 0.4
+# TestsBackend version 0.5
 
 ***updates***:
+
+*ver 0.5*
+- Добавлен Swagger.
 
 *ver 0.4*
  - Метод getSubjects (пункт 7) + устранение неисправности, связанной с добавлением теста
