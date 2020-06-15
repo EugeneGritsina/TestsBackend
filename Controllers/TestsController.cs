@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using WebApiAttempt1.DTO;
 using WebApiAttempt1.JSONmodels;
 using WebApiAttempt1.Models;
+using WebApiAttempt1.Repositories;
 using WebApiAttempt1.ViewModels;
 
 namespace WebApiAttempt1.Controllers
@@ -13,70 +14,37 @@ namespace WebApiAttempt1.Controllers
     [ApiController]
     public class TestsController : ControllerBase
     {
+        readonly ITestsRepository _testsRepository;
+        TestsContext _testsContext;
 
-        TestsContext TestsContext;
-
-        public TestsController(TestsContext testsContext)
+        public TestsController(TestsContext testsContext, ITestsRepository testsRepository)
         {
-            TestsContext = testsContext;
+            _testsContext = testsContext;
+            _testsRepository = testsRepository;
         }
 
         [HttpGet]
         [Produces("application/json")]
-        public IQueryable<TestWithObjectSubject> Get()
+        public ActionResult<IQueryable<TestWithObjectSubject>> Get()
         {
-            return from t in TestsContext.Tests
-                    select new TestWithObjectSubject
-                    {
-                        Id = t.Id,
-                        Name = t.Name,
-                        DueDateTime = t.DueDateTime,
-                        EstimatedTime = $"{t.EstimatedTime.Value.Hours}:{t.EstimatedTime.Value.Minutes}",
-                        QuestionsAmount = t.QuestionsAmount,
-                        MaxMark = t.MaxMark,
-                        IsOpen = t.IsOpen,
-                        CreationDate = t.CreationDate,
-                        SubjectObject = (from s in TestsContext.Subjects
-                                         where s.Id == t.SubjectId
-                                         select s).First()
-                    };
+            try
+            {
+                return Ok(_testsRepository.GetTestsWithObjectSubject());
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
         }
 
         [HttpGet("{id}", Name = "Get")]
         [Produces("application/json")]
         public ActionResult<TestForProfessorDTO> Get(int id)
         {
-            TestForProfessorDTO test = new TestForProfessorDTO();
+            TestForProfessorDTO test;
             try
             {
-                test = (from t in TestsContext.Tests
-                        where t.Id == id
-                        select new TestForProfessorDTO
-                        {
-                            Id = t.Id,
-                            Name = t.Name,
-                            DueDateTime = t.DueDateTime,
-                            EstimatedTime = $"{t.EstimatedTime.Value.Hours}:{t.EstimatedTime.Value.Minutes}",
-                            QuestionsAmount = t.QuestionsAmount,
-                            MaxMark = t.MaxMark,
-                            IsOpen = t.IsOpen,
-                            CreationDate = t.CreationDate,
-                            SubjectObject = (from s in TestsContext.Subjects
-                                             where s.Id == t.SubjectId
-                                             select s).First(),
-                            Questions = (from q in TestsContext.Questions
-                                         where q.TestId == t.Id
-                                         select new QuestionWithAnswers
-                                         {
-                                             Id = q.Id,
-                                             Description = q.Description,
-                                             QuestionType = q.QuestionType,
-                                             Points = q.Points,
-                                             Answers = (from a in TestsContext.Answers
-                                                        where a.QuestionId == q.Id
-                                                        select a).ToList()
-                                         }).ToList()
-                        }).First();
+                test = _testsRepository.GetTestForProfessor(id);
             }
             catch (Exception e)
             {
@@ -90,75 +58,13 @@ namespace WebApiAttempt1.Controllers
         [Produces("application/json")]
         public ActionResult<TestForStudentDTO> SendTestToCompleteToStudent(int id)
         {
-            TestForStudentDTO test = new TestForStudentDTO();
+            TestForStudentDTO test;
             try
             {
-                test = (from t in TestsContext.Tests
-                        where t.Id == id
-                        select new TestForStudentDTO
-                        {
-                            Id = t.Id,
-                            Name = t.Name,
-                            DueDateTime = t.DueDateTime,
-                            EstimatedTime = $"{t.EstimatedTime.Value.Hours}:{t.EstimatedTime.Value.Minutes}",
-                            QuestionsAmount = t.QuestionsAmount,
-                            MaxMark = t.MaxMark,
-                            IsOpen = t.IsOpen,
-                            CreationDate = t.CreationDate,
-                            SubjectObject = (from s in TestsContext.Subjects
-                                            where s.Id == t.SubjectId
-                                            select s).First(),
-                            Questions = (from q in TestsContext.Questions
-                                        where q.TestId == t.Id
-                                        select new QuestionWithAnswersWithoutStatus
-                                        {
-                                            Id = q.Id,
-                                            TestId = q.TestId,
-                                            Description = q.Description,
-                                            QuestionType = q.QuestionType,
-                                            Points = q.Points,
-                                            Answers = (from a in TestsContext.Answers
-                                                        where a.QuestionId == q.Id
-                                                        select new AnswerWithoutStatus { 
-                                                            Id = a.Id,
-                                                            QuestionId = a.QuestionId,
-                                                            Value = a.Value
-                                                        }).ToList()
-                                        }).ToList()
-                        }).First();
-
-                #region [REPLACING_FULL_LIST_OF_QUESTIONS_BY_AMOUNT_OF_QUESTIONS_USING_MAX_MARK]
-                List<QuestionWithAnswersWithoutStatus> questions = new List<QuestionWithAnswersWithoutStatus>();
-                double howMuchPointsLeft = test.MaxMark;
-                Random random = new Random();
-                try
-                {
-                    while (howMuchPointsLeft != 0)
-                    {
-                        QuestionWithAnswersWithoutStatus question;
-                        while (true)
-                        {
-                            question = test.Questions[random.Next(0, test.Questions.Count)]; //извлечение произвольного вопроса из списка вопросов для теста
-                            if (question.Points <= howMuchPointsLeft)
-                                break;
-                        }
-                        if (!questions.Contains(question))
-                        {
-                            questions.Add(question);
-                            howMuchPointsLeft -= question.Points;
-                        }
-                    }
-                    test.Questions = questions;
-                }
-                catch (ArgumentOutOfRangeException e)
-                {
-                    Console.WriteLine(e);
-                }
-                #endregion [REPLACING_FULL_LIST_OF_QUESTIONS_BY_AMOUNT_OF_QUESTIONS_USING_MAX_MARK]}
+                test = _testsRepository.SendTestToCompleteToStudent(id);
             }
             catch(Exception e)
             {
-                Console.WriteLine(e);
                 return BadRequest(e);
             }
             return Ok(test);
@@ -171,7 +77,7 @@ namespace WebApiAttempt1.Controllers
                 return BadRequest();
 
             List<string> testNames = new List<string>();
-            foreach (var t in TestsContext.Tests)
+            foreach (var t in _testsContext.Tests)
                 testNames.Add(t.Name);
             if (testNames.Contains(test.Name))                                               // проверка, не создан ли тест с таким же именем, если создан - не добавлять
                 return BadRequest("Test with the same name already exists.");
@@ -191,8 +97,8 @@ namespace WebApiAttempt1.Controllers
                     CreationDate = DateTime.Now,
                     SubjectId = test.SubjectObject.Id
                 };
-                TestsContext.Tests.Add(testToCreate);
-                TestsContext.SaveChanges();
+                _testsContext.Tests.Add(testToCreate);
+                _testsContext.SaveChanges();
 
                 if (test.Questions != null) //если не были переданы вопросы, не добавлять их в бд.
                 {
@@ -201,8 +107,8 @@ namespace WebApiAttempt1.Controllers
                     {
                         q.TestId = testToCreate.Id;
                         q.Id = 0;                                                          // в БД уже может быть вопрос с таким ID, поэтому возникнет ошибка
-                        TestsContext.Questions.Add(q);                                     // для решения проблемы ID зануляется, вопрос добавляется в БД, а всем связанным ответам
-                        TestsContext.SaveChanges();
+                        _testsContext.Questions.Add(q);                                     // для решения проблемы ID зануляется, вопрос добавляется в БД, а всем связанным ответам
+                        _testsContext.SaveChanges();
                         foreach (var a in q.Answers)                                                // присваивается новое значение ID, выданное БД
                             a.QuestionId = q.Id;
                     }
@@ -212,14 +118,14 @@ namespace WebApiAttempt1.Controllers
                         if (q.Answers != null) { 
                             foreach (var a in q.Answers)
                                 a.Id = 0;
-                            TestsContext.Answers.AddRange(q.Answers);
+                            _testsContext.Answers.AddRange(q.Answers);
                         }
                     }
-                    TestsContext.SaveChanges();
+                    _testsContext.SaveChanges();
                 }
 
                 // в принципе, без этого запроса можно было бы и обойтись, я думаю, просто можно было переприсвоить id самого теста, а что там с остальными id -- вроде, не важно
-                test = (from t in TestsContext.Tests
+                test = (from t in _testsContext.Tests
                         where t.Id == testToCreate.Id
                         select new TestForProfessorDTO
                         {
@@ -231,10 +137,10 @@ namespace WebApiAttempt1.Controllers
                             MaxMark = t.MaxMark,
                             IsOpen = t.IsOpen,
                             CreationDate = t.CreationDate,
-                            SubjectObject = (from s in TestsContext.Subjects
+                            SubjectObject = (from s in _testsContext.Subjects
                                              where s.Id == t.SubjectId
                                              select s).First(),
-                            Questions = (from q in TestsContext.Questions
+                            Questions = (from q in _testsContext.Questions
                                          where q.TestId == t.Id
                                          select new QuestionWithAnswers
                                          {
@@ -243,7 +149,7 @@ namespace WebApiAttempt1.Controllers
                                              Description = q.Description,
                                              QuestionType = q.QuestionType,
                                              Points = q.Points,
-                                             Answers = (from a in TestsContext.Answers
+                                             Answers = (from a in _testsContext.Answers
                                                         where a.QuestionId == q.Id
                                                         select a).ToList()
                                          }).ToList()
@@ -264,7 +170,7 @@ namespace WebApiAttempt1.Controllers
             {
                 string[] splittedEstimatedTime = test.EstimatedTime.Split(':');
 
-                Test testToUpdate = TestsContext.Tests.Find(test.Id);       // берем тест, который нужно обновить
+                Test testToUpdate = _testsContext.Tests.Find(test.Id);       // берем тест, который нужно обновить
 
                 testToUpdate.Name = test.Name;                              // задаем поля информации о тесте
                 testToUpdate.DueDateTime = test.DueDateTime;
@@ -273,17 +179,17 @@ namespace WebApiAttempt1.Controllers
                 testToUpdate.MaxMark = test.MaxMark;
                 testToUpdate.IsOpen = test.IsOpen;
                                 
-                IQueryable<Question> QuestionsConnectedWithTest = from q in TestsContext.Questions      
+                IQueryable<Question> QuestionsConnectedWithTest = from q in _testsContext.Questions      
                                                                        where q.TestId == test.Id
                                                                        select q;
 
-                TestsContext.Questions.RemoveRange(QuestionsConnectedWithTest);             // удаляем все старые вопросы, связанные с тестом
+                _testsContext.Questions.RemoveRange(QuestionsConnectedWithTest);             // удаляем все старые вопросы, связанные с тестом
                 
                 foreach (var q in test.Questions)                                           // чтобы дальше их обновленную версию добавить из новой модельки теста
                 {
                     q.Id = 0;                                                          // в БД уже может быть вопрос с таким ID, поэтому возникнет ошибка
-                    TestsContext.Questions.Add(q);                                     // для решения проблемы ID зануляется, вопрос добавляется в БД, а всем связанным ответам
-                    TestsContext.SaveChanges();
+                    _testsContext.Questions.Add(q);                                     // для решения проблемы ID зануляется, вопрос добавляется в БД, а всем связанным ответам
+                    _testsContext.SaveChanges();
                     foreach (var a in q.Answers)                                                // присваивается новое значение ID, выданное БД
                         a.QuestionId = q.Id;
                 }
@@ -292,10 +198,10 @@ namespace WebApiAttempt1.Controllers
                 {
                     foreach (var a in q.Answers)
                         a.Id = 0;
-                    TestsContext.Answers.AddRange(q.Answers);
+                    _testsContext.Answers.AddRange(q.Answers);
                 }
 
-                TestsContext.SaveChanges();
+                _testsContext.SaveChanges();
                 return Ok(test);
             }
             catch
@@ -309,8 +215,8 @@ namespace WebApiAttempt1.Controllers
         public ActionResult CloseOrOpenTest(int id)
         {
             try { 
-                TestsContext.Tests.Find(id).IsOpen = TestsContext.Tests.Find(id).IsOpen == true ? false : true;
-                TestsContext.SaveChanges();
+                _testsContext.Tests.Find(id).IsOpen = _testsContext.Tests.Find(id).IsOpen == true ? false : true;
+                _testsContext.SaveChanges();
                 return Ok($"State of test with id: {id} was changed.");
             }
             catch
@@ -324,8 +230,8 @@ namespace WebApiAttempt1.Controllers
         {
             try 
             { 
-                TestsContext.Tests.Remove(TestsContext.Tests.Find(id));
-                TestsContext.SaveChanges();
+                _testsContext.Tests.Remove(_testsContext.Tests.Find(id));
+                _testsContext.SaveChanges();
                 return Ok();
             }
             catch(Exception e)
@@ -351,7 +257,7 @@ namespace WebApiAttempt1.Controllers
                 foreach (QuestionWithAnswers q in testSentByUser.Questions)
                 {
                     List<Answer> correctAnswersFor_q = new List<Answer>();
-                    correctAnswersFor_q = (from a in TestsContext.Answers
+                    correctAnswersFor_q = (from a in _testsContext.Answers
                                            where a.QuestionId == q.Id && a.Status == true
                                            select a).ToList();
 
@@ -375,7 +281,7 @@ namespace WebApiAttempt1.Controllers
         [Produces("application/json")]
         public IQueryable<TestWithObjectSubject> GetParticularAmountOfTests(int amount, int pageNumber)
         {
-            return (from t in TestsContext.Tests
+            return (from t in _testsContext.Tests
                     select new TestWithObjectSubject
                     {
                         Id = t.Id,
@@ -386,7 +292,7 @@ namespace WebApiAttempt1.Controllers
                         MaxMark = t.MaxMark,
                         IsOpen = t.IsOpen,
                         CreationDate = t.CreationDate,
-                        SubjectObject = (from s in TestsContext.Subjects
+                        SubjectObject = (from s in _testsContext.Subjects
                                          where s.Id == t.SubjectId
                                          select s).First()
                     }).Skip(amount * pageNumber).Take(amount);

@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Hosting;
+using WebApiAttempt1.Repositories;
 
 namespace WebApiAttempt1
 {
@@ -19,6 +20,7 @@ namespace WebApiAttempt1
         {
             string connection = configuration.GetConnectionString("TestsBSUConnection");
             services.AddDbContext<TestsContext>(options => options.UseSqlServer(connection));
+            services.AddScoped<ITestsRepository, TestsRepository>();
             services.AddControllers();
             services.AddMvc();
             services.AddSwaggerGen(c =>
