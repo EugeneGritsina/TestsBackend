@@ -8,6 +8,12 @@ namespace WebApiAttempt1.DTO
     {
         public Subject SubjectObject { get; set; }
         public List<QuestionWithAnswersWithoutStatus> Questions { get; set; }
+
+        public TestForStudentDTO()
+        {
+            SubjectObject = new Subject();
+            Questions = new List<QuestionWithAnswersWithoutStatus>();
+        }
     }
 
     public class AnswerWithoutStatus

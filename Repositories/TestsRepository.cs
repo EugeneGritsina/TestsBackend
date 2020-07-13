@@ -24,7 +24,7 @@ namespace WebApiAttempt1.Repositories
                        Id = t.Id,
                        Name = t.Name,
                        DueDateTime = t.DueDateTime,
-                       EstimatedTime = $"{t.EstimatedTime.Value.Hours}:{t.EstimatedTime.Value.Minutes}",
+                       EstimatedTime = t.EstimatedTime,
                        QuestionsAmount = t.QuestionsAmount,
                        MaxMark = t.MaxMark,
                        IsOpen = t.IsOpen,
@@ -44,7 +44,7 @@ namespace WebApiAttempt1.Repositories
                          Id = t.Id,
                          Name = t.Name,
                          DueDateTime = t.DueDateTime,
-                         EstimatedTime = $"{t.EstimatedTime.Value.Hours}:{t.EstimatedTime.Value.Minutes}",
+                         EstimatedTime = t.EstimatedTime,
                          QuestionsAmount = t.QuestionsAmount,
                          MaxMark = t.MaxMark,
                          IsOpen = t.IsOpen,
@@ -67,73 +67,178 @@ namespace WebApiAttempt1.Repositories
                      }).First();
         }
 
-        public TestForStudentDTO SendTestToCompleteToStudent(int id)
+        public TestForStudentDTO GetTestToCompleteToStudent(int id)
         {
-            TestForStudentDTO test = (from t in _testsContext.Tests
-                                    where t.Id == id
-                                    select new TestForStudentDTO
-                                    {
-                                        Id = t.Id,
-                                        Name = t.Name,
-                                        DueDateTime = t.DueDateTime,
-                                        EstimatedTime = $"{t.EstimatedTime.Value.Hours}:{t.EstimatedTime.Value.Minutes}",
-                                        QuestionsAmount = t.QuestionsAmount,
-                                        MaxMark = t.MaxMark,
-                                        IsOpen = t.IsOpen,
-                                        CreationDate = t.CreationDate,
-                                        SubjectObject = (from s in _testsContext.Subjects
-                                                        where s.Id == t.SubjectId
-                                                        select s).First(),
-                                        Questions = (from q in _testsContext.Questions
-                                                    where q.TestId == t.Id
-                                                    select new QuestionWithAnswersWithoutStatus
-                                                    {
-                                                        Id = q.Id,
-                                                        TestId = q.TestId,
-                                                        Description = q.Description,
-                                                        QuestionType = q.QuestionType,
-                                                        Points = q.Points,
-                                                        Answers = (from a in _testsContext.Answers
-                                                                    where a.QuestionId == q.Id
-                                                                    select new AnswerWithoutStatus
-                                                                    {
-                                                                        Id = a.Id,
-                                                                        QuestionId = a.QuestionId,
-                                                                        Value = a.Value
-                                                                    }).ToList()
-                                                    }).ToList()
-                                    }).First();
+            TestForStudentDTO test = new TestForStudentDTO();
+            test = (from t in _testsContext.Tests
+                    where t.Id == id
+                    select new TestForStudentDTO
+                    {
+                        Id = t.Id,
+                        Name = t.Name,
+                        DueDateTime = t.DueDateTime,
+                        EstimatedTime = t.EstimatedTime,
+                        QuestionsAmount = t.QuestionsAmount,
+                        MaxMark = t.MaxMark,
+                        IsOpen = t.IsOpen,
+                        CreationDate = t.CreationDate,
+                        SubjectObject = (from s in _testsContext.Subjects
+                                         where s.Id == t.SubjectId
+                                         select s).First()
+                    }).First();
 
-            #region [REPLACING_FULL_LIST_OF_QUESTIONS_BY_AMOUNT_OF_QUESTIONS_USING_MAX_MARK]
-            List<QuestionWithAnswersWithoutStatus> questions = new List<QuestionWithAnswersWithoutStatus>();
-            double howMuchPointsLeft = test.MaxMark;
-            Random random = new Random();
-            try
+            double howMuchLeft = test.MaxMark;
+
+            while(howMuchLeft != 0) 
             {
-                while (howMuchPointsLeft != 0)
+                Question question = _testsContext.Questions.FirstOrDefault(q => q.TestId == test.Id && (howMuchLeft - q.Points >= 0) && test.Questions.Contains(q) == false);
+
+                if (question == null)
+                    break;
+
+                test.Questions.Add(new QuestionWithAnswersWithoutStatus
                 {
-                    QuestionWithAnswersWithoutStatus question;
-                    while (true)
-                    {
-                        question = test.Questions[random.Next(0, test.Questions.Count)]; //извлечение произвольного вопроса из списка вопросов для теста
-                        if (question.Points <= howMuchPointsLeft)
-                            break;
-                    }
-                    if (!questions.Contains(question))
-                    {
-                        questions.Add(question);
-                        howMuchPointsLeft -= question.Points;
-                    }
-                }
-                test.Questions = questions;
+                    Id = question.Id,
+                    TestId = question.TestId,
+                    Description = question.Description,
+                    QuestionType = question.QuestionType,
+                    Points = question.Points,
+                    Answers = (from a in _testsContext.Answers
+                               where a.QuestionId == question.Id
+                               select new AnswerWithoutStatus
+                               {
+                                   Id = a.Id,
+                                   QuestionId = a.QuestionId,
+                                   Value = a.Value
+                               }).ToList()
+                });
+
+                howMuchLeft -= question.Points;
             }
-            catch (ArgumentOutOfRangeException e)
-            {
-                Console.WriteLine(e);
-            }
-            #endregion [REPLACING_FULL_LIST_OF_QUESTIONS_BY_AMOUNT_OF_QUESTIONS_USING_MAX_MARK]
 
             return test;
+        }
+
+        public Test SaveTest(TestForProfessorDTO test)
+        {
+            if (test == null)
+                throw new Exception("Null test object.");
+
+            // проверка, не создан ли тест с таким же именем, если создан - не добавлять
+            if ((from t in _testsContext.Tests
+                    select t.Name).Contains(test.Name))
+                throw new Exception("Test with the same name already exists.");
+
+            IEnumerable<int> alreadyUsedTestIds = from t in _testsContext.Tests
+                                                  select t.Id;
+            // задаем поля информации о тесте
+            Test testToCreate = new Test()
+            {
+                // присвоение добавляемому тесту id в диапазрне от 1 до int32.MaxValue, исключая те id, которые уже имеются в БД
+                Id = Enumerable.Range(1,Int32.MaxValue).First(digit => !alreadyUsedTestIds.Contains(digit)),
+                Name = test.Name,
+                DueDateTime = test.DueDateTime,
+                EstimatedTime = test.EstimatedTime,
+                QuestionsAmount = test.QuestionsAmount,
+                MaxMark = test.MaxMark,
+                IsOpen = test.IsOpen,
+                CreationDate = DateTime.Now,
+                SubjectId = test.SubjectObject.Id
+            };
+
+            _testsContext.Tests.Add(testToCreate);
+            _testsContext.SaveChanges();
+
+            //если вопросы не были переданы, не добавлять их в бд.
+            if (test.Questions != null)
+            {
+                List<int> alreadyUsedQuestionIds = new List<int>(); 
+                alreadyUsedQuestionIds = (from q in _testsContext.Questions
+                                          select q.Id).ToList();
+                List<int> alreadyUseвAnswerIds = new List<int>();
+                alreadyUseвAnswerIds = (from a in _testsContext.Answers
+                                                  select a.Id).ToList();
+                foreach (var question in test.Questions)
+                {
+                    question.TestId = testToCreate.Id;
+                    question.Id = Enumerable.Range(1, Int32.MaxValue).First(digit => !alreadyUsedQuestionIds.Contains(digit));
+                    alreadyUsedQuestionIds.Add(question.Id);
+                    _testsContext.Questions.Add(question);
+                    _testsContext.SaveChanges();
+
+                    if (question.Answers != null)
+                    {
+                        foreach (var answer in question.Answers)
+                        {
+                            answer.QuestionId = question.Id;
+                            answer.Id = Enumerable.Range(1, Int32.MaxValue).First(digit => !alreadyUseвAnswerIds.Contains(digit));
+                            alreadyUseвAnswerIds.Add(answer.Id);
+                            _testsContext.Add(answer);
+                            _testsContext.SaveChanges();
+                        }
+                    }
+                }
+            }
+            return testToCreate;
+        }
+
+        public void DeleteTest(int id)
+        {
+            _testsContext.Tests.Remove(_testsContext.Tests.Find(id));
+            _testsContext.SaveChanges();
+        }
+
+        public string CloseOrOpenTest(int id)
+        {
+            _testsContext.Tests.Find(id).IsOpen = _testsContext.Tests.Find(id).IsOpen == true ? false : true;
+            _testsContext.SaveChanges();
+            return $"State of test with id: {id} was changed.";
+        }
+
+        public string UpdateTest(TestForProfessorDTO test)
+        {
+            Test testToUpdate = _testsContext.Tests.Find(test.Id);       // берем тест, который нужно обновить
+
+            testToUpdate.Name = test.Name;                              // задаем поля информации о тесте
+            testToUpdate.DueDateTime = test.DueDateTime;
+            testToUpdate.EstimatedTime = test.EstimatedTime;
+            testToUpdate.QuestionsAmount = test.QuestionsAmount;
+            testToUpdate.MaxMark = test.MaxMark;
+            testToUpdate.IsOpen = test.IsOpen;
+
+            IQueryable<Question> QuestionsConnectedWithTest = from q in _testsContext.Questions
+                                                              where q.TestId == test.Id
+                                                              select q;
+            // удаляем все старые вопросы, связанные с тестом
+            _testsContext.Questions.RemoveRange(QuestionsConnectedWithTest);          
+
+            List<int> alreadyUsedQuestionIds = new List<int>();
+            alreadyUsedQuestionIds = (from q in _testsContext.Questions
+                                      select q.Id).ToList();
+            List<int> alreadyUseвAnswerIds = new List<int>();
+            alreadyUseвAnswerIds = (from a in _testsContext.Answers
+                                    select a.Id).ToList();
+
+            // чтобы дальше их обновленную версию добавить из новой модельки теста
+            foreach (var question in test.Questions)
+            {
+                question.TestId = test.Id;
+                question.Id = Enumerable.Range(1, Int32.MaxValue).First(digit => !alreadyUsedQuestionIds.Contains(digit));
+                alreadyUsedQuestionIds.Add(question.Id);
+                _testsContext.Questions.Add(question);
+                _testsContext.SaveChanges();
+                foreach (var answer in question.Answers)
+                {
+                    answer.QuestionId = question.Id;
+                    answer.Id = Enumerable.Range(1, Int32.MaxValue).First(digit => !alreadyUseвAnswerIds.Contains(digit));
+                    alreadyUseвAnswerIds.Add(answer.Id);
+                    _testsContext.Add(answer);
+                    _testsContext.SaveChanges();
+                }
+            }
+
+            _testsContext.SaveChanges();
+            return testToUpdate.Name;
         }
     }
 }

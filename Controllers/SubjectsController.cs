@@ -30,7 +30,7 @@ namespace WebApiAttempt1.Controllers
                                     Id = t.Id,
                                     Name = t.Name,
                                     DueDateTime = t.DueDateTime,
-                                    EstimatedTime = $"{t.EstimatedTime.Value.Hours}:{t.EstimatedTime.Value.Minutes}",
+                                    EstimatedTime = t.EstimatedTime,
                                     QuestionsAmount = t.QuestionsAmount,
                                     MaxMark = t.MaxMark,
                                     IsOpen = t.IsOpen,
