@@ -6,6 +6,7 @@ using WebApiAttempt1.DTO;
 using WebApiAttempt1.JSONmodels;
 using WebApiAttempt1.Models;
 using WebApiAttempt1.Repositories;
+using WebApiAttempt1.Services;
 using WebApiAttempt1.ViewModels;
 
 namespace WebApiAttempt1.Controllers
@@ -16,11 +17,13 @@ namespace WebApiAttempt1.Controllers
     {
         readonly ITestsRepository _testsRepository;
         TestsContext _testsContext;
+        TestsService _testsService;
 
-        public TestsController(TestsContext testsContext, ITestsRepository testsRepository)
+        public TestsController(TestsContext testsContext, ITestsRepository testsRepository, TestsService testsService)
         {
             _testsContext = testsContext;
             _testsRepository = testsRepository;
+            _testsService = testsService;
         }
 
         [HttpGet]
@@ -120,35 +123,13 @@ namespace WebApiAttempt1.Controllers
             }
         }
 
-
-
         [HttpPost]
         [Route("student")]
         public ActionResult CheckAnswers(TestForProfessorDTO testSentByUser)
         {
-            if (testSentByUser == null)
-                return BadRequest();
             try
             {
-                float gainedMark = 0;
-
-                List<Answer> correctAnswers = new List<Answer>();
-
-                foreach (QuestionWithAnswers q in testSentByUser.Questions)
-                {
-                    List<Answer> correctAnswersFor_q = new List<Answer>();
-                    correctAnswersFor_q = (from a in _testsContext.Answers
-                                           where a.QuestionId == q.Id && a.Status == true
-                                           select a).ToList();
-
-                    if (correctAnswers == q.Answers)
-                        gainedMark += (float)q.Points;
-
-                    correctAnswers.AddRange(correctAnswersFor_q);
-                }
-
-
-                return Ok();
+                return Ok(_testsService.CheckAnswers(testSentByUser));
             }
             catch (Exception e)
             {
@@ -156,27 +137,27 @@ namespace WebApiAttempt1.Controllers
             }
         }
 
-        //запрос без фильтрации для отображения определенного количества тестов на одной конкретной странице
-        [HttpGet("{amount}/{pageNumber}")]
-        [Produces("application/json")]
-        public IQueryable<TestWithObjectSubject> GetParticularAmountOfTests(int amount, int pageNumber)
-        {
-            return (from t in _testsContext.Tests
-                    select new TestWithObjectSubject
-                    {
-                        Id = t.Id,
-                        Name = t.Name,
-                        DueDateTime = t.DueDateTime,
-                        EstimatedTime = t.EstimatedTime,
-                        QuestionsAmount = t.QuestionsAmount,
-                        MaxMark = t.MaxMark,
-                        IsOpen = t.IsOpen,
-                        CreationDate = t.CreationDate,
-                        SubjectObject = (from s in _testsContext.Subjects
-                                         where s.Id == t.SubjectId
-                                         select s).First()
-                    }).Skip(amount * pageNumber).Take(amount);
-        }
+        ////запрос без фильтрации для отображения определенного количества тестов на одной конкретной странице
+        //[HttpGet("{amount}/{pageNumber}")]
+        //[Produces("application/json")]
+        //public IQueryable<TestWithObjectSubject> GetParticularAmountOfTests(int amount, int pageNumber)
+        //{
+        //    return (from t in _testsContext.Tests
+        //            select new TestWithObjectSubject
+        //            {
+        //                Id = t.Id,
+        //                Name = t.Name,
+        //                DueDateTime = t.DueDateTime,
+        //                EstimatedTime = t.EstimatedTime,
+        //                QuestionsAmount = t.QuestionsAmount,
+        //                MaxMark = t.MaxMark,
+        //                IsOpen = t.IsOpen,
+        //                CreationDate = t.CreationDate,
+        //                SubjectObject = (from s in _testsContext.Subjects
+        //                                 where s.Id == t.SubjectId
+        //                                 select s).First()
+        //            }).Skip(amount * pageNumber).Take(amount);
+        //}
 
        
     }
