@@ -22,7 +22,9 @@ namespace WebApiAttempt1.Controllers
                     select new SubjectsListDTO
                     {
                         Id = s.Id,
-                        SubjectTypeId = s.SubjectTypeId,
+                        SubjectType = (from subjectType in TestsContext.SubjectTypes
+                                         where subjectType.Id == s.SubjectTypeId
+                                         select subjectType).First(),
                         Name = s.Name,
                         Tests = (from t in TestsContext.Tests
                                 where t.SubjectId == s.Id

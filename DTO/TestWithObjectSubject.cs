@@ -5,6 +5,6 @@ namespace WebApiAttempt1.ViewModels
 {
     public class TestWithObjectSubject : TestDTO
     {
-        public Subject SubjectObject { get; set; }
+        public SubjectDTO SubjectDTO { get; set; }
     }
 }

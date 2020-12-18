@@ -1,10 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using Microsoft.AspNetCore.Mvc;
 using WebApiAttempt1.DTO;
 using WebApiAttempt1.JSONmodels;
-using WebApiAttempt1.Models;
 using WebApiAttempt1.Repositories;
 using WebApiAttempt1.Services;
 using WebApiAttempt1.ViewModels;
@@ -13,21 +11,19 @@ namespace WebApiAttempt1.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Produces("application/json")]
     public class TestsController : ControllerBase
     {
         readonly ITestsRepository _testsRepository;
-        TestsContext _testsContext;
-        TestsService _testsService;
+        readonly ITestsService _testsService;
 
-        public TestsController(TestsContext testsContext, ITestsRepository testsRepository, TestsService testsService)
+        public TestsController(ITestsRepository testsRepository, ITestsService testsService)
         {
-            _testsContext = testsContext;
             _testsRepository = testsRepository;
             _testsService = testsService;
         }
 
         [HttpGet]
-        [Produces("application/json")]
         public ActionResult<IQueryable<TestWithObjectSubject>> GetListOfSubjectAndTests()
         {
             try
@@ -41,7 +37,6 @@ namespace WebApiAttempt1.Controllers
         }
 
         [HttpGet("{id}", Name = "Get")]
-        [Produces("application/json")]
         public ActionResult<TestForProfessorDTO> GetTestForProffessor(int id)
         {
             try
@@ -56,7 +51,6 @@ namespace WebApiAttempt1.Controllers
 
         [HttpGet]
         [Route("student/{id}")]
-        [Produces("application/json")]
         public ActionResult<TestForStudentDTO> GetTestToCompleteToStudent(int id)
         {
             try
@@ -95,7 +89,6 @@ namespace WebApiAttempt1.Controllers
             }
         }
 
-        // метод открывает/закрывает тест
         [HttpPatch("{id}")]
         public ActionResult CloseOrOpenTest(int id)
         {

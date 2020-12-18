@@ -22,7 +22,7 @@ namespace WebApiAttempt1
             string connection = configuration.GetConnectionString("TestsBSUConnection");
             services.AddDbContext<TestsContext>(options => options.UseSqlServer(connection));
             services.AddScoped<ITestsRepository, TestsRepository>();
-            services.AddTransient<TestsService>();
+            services.AddScoped<ITestsService, TestsService>();
             services.AddControllers();
             services.AddMvc();
             services.AddSwaggerGen(c =>

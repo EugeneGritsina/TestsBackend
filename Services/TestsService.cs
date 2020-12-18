@@ -8,7 +8,7 @@ using WebApiAttempt1.ViewModels;
 
 namespace WebApiAttempt1.Services
 {
-    public class TestsService
+    public class TestsService : ITestsService
     {
         TestsContext _testsContext;
 

@@ -29,9 +29,15 @@ namespace WebApiAttempt1.Repositories
                        MaxMark = t.MaxMark,
                        IsOpen = t.IsOpen,
                        CreationDate = t.CreationDate,
-                       SubjectObject = (from s in _testsContext.Subjects
+                       SubjectDTO = (from s in _testsContext.Subjects
                                         where s.Id == t.SubjectId
-                                        select s).First()
+                                        select new SubjectDTO {
+                                            Id = s.Id,
+                                            Name = s.Name,
+                                            SubjectType = (from subType in _testsContext.SubjectTypes
+                                                          where subType.Id == s.SubjectTypeId
+                                                          select subType).First()
+                                        }).First()
                    };
         }
 
@@ -51,14 +57,22 @@ namespace WebApiAttempt1.Repositories
                          CreationDate = t.CreationDate,
                          SubjectObject = (from s in _testsContext.Subjects
                                           where s.Id == t.SubjectId
-                                          select s).First(),
+                                          select new SubjectDTO {
+                                              Id = s.Id,
+                                              Name = s.Name,
+                                              SubjectType = (from st in _testsContext.SubjectTypes
+                                                             where s.SubjectTypeId == st.Id
+                                                            select st).First()
+                                          }).First(),
                          Questions = (from q in _testsContext.Questions
                                       where q.TestId == t.Id
                                       select new QuestionWithAnswers
                                       {
                                           Id = q.Id,
                                           Description = q.Description,
-                                          QuestionType = q.QuestionType,
+                                          QuestionType = (from questionType in _testsContext.QuestionTypes
+                                                           where q.QuestionTypeId == questionType.Id
+                                                           select questionType).First(),
                                           Points = q.Points,
                                           Answers = (from a in _testsContext.Answers
                                                      where a.QuestionId == q.Id
@@ -82,16 +96,25 @@ namespace WebApiAttempt1.Repositories
                         MaxMark = t.MaxMark,
                         IsOpen = t.IsOpen,
                         CreationDate = t.CreationDate,
-                        SubjectObject = (from s in _testsContext.Subjects
-                                         where s.Id == t.SubjectId
-                                         select s).First()
+                        SubjectDTO = (from s in _testsContext.Subjects
+                                      where s.Id == t.SubjectId
+                                      select new SubjectDTO
+                                      {
+                                          Id = s.Id,
+                                          Name = s.Name,
+                                          SubjectType = (from subType in _testsContext.SubjectTypes
+                                                         where subType.Id == s.SubjectTypeId
+                                                         select subType).First()
+                                      }).First()
                     }).First();
 
             double howMuchLeft = test.MaxMark;
 
             while(howMuchLeft != 0) 
             {
-                Question question = _testsContext.Questions.FirstOrDefault(q => q.TestId == test.Id && (howMuchLeft - q.Points >= 0) && test.Questions.Contains(q) == false);
+                Question question = _testsContext.Questions.FirstOrDefault(q => q.TestId == test.Id &&
+                                                                                (howMuchLeft - q.Points >= 0) &&
+                                                                                test.Questions.Contains(q) == false);
 
                 if (question == null)
                     break;
@@ -101,7 +124,7 @@ namespace WebApiAttempt1.Repositories
                     Id = question.Id,
                     TestId = question.TestId,
                     Description = question.Description,
-                    QuestionType = question.QuestionType,
+                    QuestionTypeId = question.QuestionTypeId,
                     Points = question.Points,
                     Answers = (from a in _testsContext.Answers
                                where a.QuestionId == question.Id

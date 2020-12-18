@@ -6,12 +6,12 @@ namespace WebApiAttempt1.DTO
 {
     public class TestForStudentDTO : TestDTO
     {
-        public Subject SubjectObject { get; set; }
+        public SubjectDTO SubjectDTO { get; set; }
         public List<QuestionWithAnswersWithoutStatus> Questions { get; set; }
 
         public TestForStudentDTO()
         {
-            SubjectObject = new Subject();
+            SubjectDTO = new SubjectDTO();
             Questions = new List<QuestionWithAnswersWithoutStatus>();
         }
     }

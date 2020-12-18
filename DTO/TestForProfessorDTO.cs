@@ -8,7 +8,7 @@ namespace WebApiAttempt1.JSONmodels
     //<description> Test with all connected questions and question answers have status here. </description>
     public class TestForProfessorDTO : TestDTO
     {
-        public Subject SubjectObject { get; set; }
+        public SubjectDTO SubjectObject { get; set; }
         public List<QuestionWithAnswers> Questions { get; set; }
     }
 }
