@@ -16,6 +16,7 @@ namespace WebApiAttempt1.Repositories
             _testsContext = testsContext;
         }
 
+        //works
         public IQueryable<TestWithObjectSubject> GetTestsWithObjectSubject()
         {
             return from t in _testsContext.Tests
@@ -41,6 +42,7 @@ namespace WebApiAttempt1.Repositories
                    };
         }
 
+        //works
         public TestForProfessorDTO GetTestForProfessor(int id)
         {
             return (from t in _testsContext.Tests
@@ -124,7 +126,9 @@ namespace WebApiAttempt1.Repositories
                     Id = question.Id,
                     TestId = question.TestId,
                     Description = question.Description,
-                    QuestionTypeId = question.QuestionTypeId,
+                    QuestionType = (from qType in _testsContext.QuestionTypes
+                                     where qType.Id == question.QuestionTypeId
+                                     select qType).First(),
                     Points = question.Points,
                     Answers = (from a in _testsContext.Answers
                                where a.QuestionId == question.Id

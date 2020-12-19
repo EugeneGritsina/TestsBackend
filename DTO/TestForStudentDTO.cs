@@ -1,6 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using WebApiAttempt1.Models;
+﻿using System.Collections.Generic;
+using WebApiAttempt1.DTO.ModelsDTO;
 
 namespace WebApiAttempt1.DTO
 {
@@ -23,7 +22,7 @@ namespace WebApiAttempt1.DTO
         public string Value { get; set; }
     }
 
-    public class QuestionWithAnswersWithoutStatus : Question
+    public class QuestionWithAnswersWithoutStatus : QuestionDTO
     {
         public List<AnswerWithoutStatus> Answers { get; set; }
 

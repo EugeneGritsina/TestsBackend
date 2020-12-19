@@ -21,7 +21,7 @@ namespace WebApiAttempt1.Models
         public DateTime? DueDateTime { get; set; }
 
         [Column(name: "estimated_time")]
-        public string EstimatedTime { get; set; }
+        public DateTime EstimatedTime { get; set; }
 
         [Column(name: "questions_amount")]
         public int QuestionsAmount { get; set; }
