@@ -2,6 +2,7 @@
 using System.Linq;
 using Microsoft.AspNetCore.Mvc;
 using WebApiAttempt1.DTO;
+using WebApiAttempt1.DTO.InputDTO;
 using WebApiAttempt1.JSONmodels;
 using WebApiAttempt1.Repositories;
 using WebApiAttempt1.Services;
@@ -64,11 +65,11 @@ namespace WebApiAttempt1.Controllers
         }
 
         [HttpPost]
-        public ActionResult Post(TestForProfessorDTO test)
+        public ActionResult Post(InputTestDTO test)
         {
             try
             {
-                return Ok(_testsRepository.SaveTest(test));
+                return Ok(_testsRepository.CreateTest(test));
             }
             catch(Exception e)
             {
@@ -77,11 +78,11 @@ namespace WebApiAttempt1.Controllers
         }
 
         [HttpPut]
-        public ActionResult Put([FromBody]TestForProfessorDTO test)
+        public ActionResult Put([FromBody]InputTestDTO test)
         {
             try
             {
-                return Ok($"Test \"{_testsRepository.UpdateTest(test)}\" was updated");
+                return Ok($"Test {_testsRepository.UpdateTest(test)} was updated");
             }
             catch (Exception e)
             {

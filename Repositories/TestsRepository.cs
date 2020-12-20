@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using WebApiAttempt1.DTO;
+using WebApiAttempt1.DTO.InputDTO;
 using WebApiAttempt1.JSONmodels;
 using WebApiAttempt1.Models;
 using WebApiAttempt1.ViewModels;
@@ -16,7 +17,6 @@ namespace WebApiAttempt1.Repositories
             _testsContext = testsContext;
         }
 
-        //works
         public IQueryable<TestWithObjectSubject> GetTestsWithObjectSubject()
         {
             return from t in _testsContext.Tests
@@ -42,7 +42,6 @@ namespace WebApiAttempt1.Repositories
                    };
         }
 
-        //works
         public TestForProfessorDTO GetTestForProfessor(int id)
         {
             return (from t in _testsContext.Tests
@@ -112,11 +111,13 @@ namespace WebApiAttempt1.Repositories
 
             double howMuchLeft = test.MaxMark;
 
+            var IdsOfQuestionsResultTestObjectAlreadyHas = new List<int>();
+
             while(howMuchLeft != 0) 
             {
                 Question question = _testsContext.Questions.FirstOrDefault(q => q.TestId == test.Id &&
                                                                                 (howMuchLeft - q.Points >= 0) &&
-                                                                                test.Questions.Contains(q) == false);
+                                                                                IdsOfQuestionsResultTestObjectAlreadyHas.Contains(q.Id) == false);
 
                 if (question == null)
                     break;
@@ -140,16 +141,18 @@ namespace WebApiAttempt1.Repositories
                                }).ToList()
                 });
 
+                IdsOfQuestionsResultTestObjectAlreadyHas.Append(question.Id);
+
                 howMuchLeft -= question.Points;
             }
 
             return test;
         }
 
-        public Test SaveTest(TestForProfessorDTO test)
+        public Test CreateTest(InputTestDTO test)
         {
             if (test == null)
-                throw new Exception("Null test object.");
+                throw new Exception("Empty test.");
 
             // проверка, не создан ли тест с таким же именем, если создан - не добавлять
             if ((from t in _testsContext.Tests
@@ -170,7 +173,7 @@ namespace WebApiAttempt1.Repositories
                 MaxMark = test.MaxMark,
                 IsOpen = test.IsOpen,
                 CreationDate = DateTime.Now,
-                SubjectId = test.SubjectObject.Id
+                SubjectId = test.SubjectId
             };
 
             _testsContext.Tests.Add(testToCreate);
@@ -222,7 +225,7 @@ namespace WebApiAttempt1.Repositories
             return $"State of test with id: {id} was changed.";
         }
 
-        public string UpdateTest(TestForProfessorDTO test)
+        public string UpdateTest(InputTestDTO test)
         {
             Test testToUpdate = _testsContext.Tests.Find(test.Id);       // берем тест, который нужно обновить
 
@@ -251,8 +254,18 @@ namespace WebApiAttempt1.Repositories
             {
                 question.TestId = test.Id;
                 question.Id = Enumerable.Range(1, Int32.MaxValue).First(digit => !alreadyUsedQuestionIds.Contains(digit));
+
+                Question questionToSave = new Question()
+                {
+                    Id = question.Id,
+                    TestId = question.TestId,
+                    Description = question.Description,
+                    QuestionTypeId = question.QuestionTypeId,
+                    Points = question.Points
+                };
+
+                _testsContext.Questions.Add(questionToSave);
                 alreadyUsedQuestionIds.Add(question.Id);
-                _testsContext.Questions.Add(question);
                 _testsContext.SaveChanges();
                 foreach (var answer in question.Answers)
                 {
