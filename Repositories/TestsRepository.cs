@@ -17,7 +17,7 @@ namespace WebApiAttempt1.Repositories
             _testsContext = testsContext;
         }
 
-        public IQueryable<TestWithObjectSubject> GetTestsWithObjectSubject(int itemsAmount)
+        public IQueryable<TestWithObjectSubject> GetTestsWithObjectSubject(int itemsAmount, int pageNumber)
         {
             return (from t in _testsContext.Tests
                    select new TestWithObjectSubject
@@ -39,7 +39,7 @@ namespace WebApiAttempt1.Repositories
                                                           where subType.Id == s.SubjectTypeId
                                                           select subType).First()
                                         }).First()
-                   }).Take(itemsAmount);
+                   }).Skip(itemsAmount * (pageNumber-1)).Take(itemsAmount);
         }
 
         public TestForProfessorDTO GetTestForProfessor(int id)

@@ -16,7 +16,7 @@ namespace WebApiAttempt1.Controllers
 
        [HttpGet]
        [Produces("application/json")]
-        public List<SubjectsListDTO> GetSubjects(int itemsAmount)
+        public List<SubjectsListDTO> GetSubjects(int itemsAmount, int pageNumber)
         {
             return (from s in TestsContext.Subjects
                     select new SubjectsListDTO
@@ -38,7 +38,7 @@ namespace WebApiAttempt1.Controllers
                                     IsOpen = t.IsOpen,
                                     CreationDate = t.CreationDate
                                 }).ToList()
-                    }).Take(itemsAmount).ToList();
+                    }).Skip(itemsAmount * (pageNumber - 1)).Take(itemsAmount).ToList();
         }
 
     }
