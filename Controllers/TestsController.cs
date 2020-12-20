@@ -118,7 +118,7 @@ namespace WebApiAttempt1.Controllers
         }
 
         [HttpPost]
-        [Route("student")]
+        [Route("CheckAnswers")]
         public ActionResult CheckAnswers(TestForProfessorDTO testSentByUser)
         {
             try
@@ -130,29 +130,5 @@ namespace WebApiAttempt1.Controllers
                 return BadRequest(e.Message);
             }
         }
-
-        ////запрос без фильтрации для отображения определенного количества тестов на одной конкретной странице
-        //[HttpGet("{amount}/{pageNumber}")]
-        //[Produces("application/json")]
-        //public IQueryable<TestWithObjectSubject> GetParticularAmountOfTests(int amount, int pageNumber)
-        //{
-        //    return (from t in _testsContext.Tests
-        //            select new TestWithObjectSubject
-        //            {
-        //                Id = t.Id,
-        //                Name = t.Name,
-        //                DueDateTime = t.DueDateTime,
-        //                EstimatedTime = t.EstimatedTime,
-        //                QuestionsAmount = t.QuestionsAmount,
-        //                MaxMark = t.MaxMark,
-        //                IsOpen = t.IsOpen,
-        //                CreationDate = t.CreationDate,
-        //                SubjectObject = (from s in _testsContext.Subjects
-        //                                 where s.Id == t.SubjectId
-        //                                 select s).First()
-        //            }).Skip(amount * pageNumber).Take(amount);
-        //}
-
-       
     }
 }

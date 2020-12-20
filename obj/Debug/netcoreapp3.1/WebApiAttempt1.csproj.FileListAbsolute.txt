@@ -253,3 +253,4 @@ C:\projects\TestsBackend\bin\Debug\netcoreapp3.1\System.Collections.Immutable.dl
 C:\projects\TestsBackend\bin\Debug\netcoreapp3.1\System.Diagnostics.DiagnosticSource.dll
 C:\projects\TestsBackend\obj\Debug\netcoreapp3.1\WebApiAttempt1.dll
 C:\projects\TestsBackend\obj\Debug\netcoreapp3.1\WebApiAttempt1.pdb
+C:\projects\TestsBackend\bin\Debug\netcoreapp3.1\Properties\ServiceDependencies\testsbsu - Web Deploy\profile.arm.json
