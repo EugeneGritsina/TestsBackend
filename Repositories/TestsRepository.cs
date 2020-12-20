@@ -149,7 +149,7 @@ namespace WebApiAttempt1.Repositories
             return test;
         }
         //create
-        public Test CreateTest(InputTestDTO test)
+        public string CreateTest(InputTestDTO test)
         {
             if (test == null)
                 throw new Exception("Empty test.");
@@ -159,57 +159,69 @@ namespace WebApiAttempt1.Repositories
                     select t.Name).Contains(test.Name))
                 throw new Exception("Test with the same name already exists.");
 
-            IEnumerable<int> alreadyUsedTestIds = from t in _testsContext.Tests
-                                                  select t.Id;
-            // задаем поля информации о тесте
-            Test testToCreate = new Test()
+            using(var transaction = _testsContext.Database.BeginTransaction())
             {
-                // присвоение добавляемому тесту id в диапазрне от 1 до int32.MaxValue, исключая те id, которые уже имеются в БД
-                Id = Enumerable.Range(1,Int32.MaxValue).First(digit => !alreadyUsedTestIds.Contains(digit)),
-                Name = test.Name,
-                DueDateTime = test.DueDateTime,
-                EstimatedTime = test.EstimatedTime,
-                QuestionsAmount = test.QuestionsAmount,
-                MaxMark = test.MaxMark,
-                IsOpen = test.IsOpen,
-                CreationDate = DateTime.Now,
-                SubjectId = test.SubjectId
-            };
-
-            _testsContext.Tests.Add(testToCreate);
-            _testsContext.SaveChanges();
-
-            //если вопросы не были переданы, не добавлять их в бд.
-            if (test.Questions != null)
-            {
-                List<int> alreadyUsedQuestionIds = new List<int>(); 
-                alreadyUsedQuestionIds = (from q in _testsContext.Questions
-                                          select q.Id).ToList();
-                List<int> alreadyUseвAnswerIds = new List<int>();
-                alreadyUseвAnswerIds = (from a in _testsContext.Answers
-                                                  select a.Id).ToList();
-                foreach (var question in test.Questions)
+                try
                 {
-                    question.TestId = testToCreate.Id;
-                    question.Id = Enumerable.Range(1, Int32.MaxValue).First(digit => !alreadyUsedQuestionIds.Contains(digit));
-                    alreadyUsedQuestionIds.Add(question.Id);
-                    _testsContext.Questions.Add(question);
+                    IEnumerable<int> alreadyUsedTestIds = from t in _testsContext.Tests
+                                                          select t.Id;
+                    // задаем поля информации о тесте
+                    Test testToCreate = new Test()
+                    {
+                        // присвоение добавляемому тесту id в диапазрне от 1 до int32.MaxValue, исключая те id, которые уже имеются в БД
+                        Id = Enumerable.Range(1, Int32.MaxValue).First(digit => !alreadyUsedTestIds.Contains(digit)),
+                        Name = test.Name,
+                        DueDateTime = test.DueDateTime,
+                        EstimatedTime = test.EstimatedTime,
+                        QuestionsAmount = test.QuestionsAmount,
+                        MaxMark = test.MaxMark,
+                        IsOpen = test.IsOpen,
+                        CreationDate = DateTime.Now,
+                        SubjectId = test.SubjectId
+                    };
+
+                    _testsContext.Tests.Add(testToCreate);
                     _testsContext.SaveChanges();
 
-                    if (question.Answers != null)
+                    //если вопросы не были переданы, не добавлять их в бд.
+                    if (test.Questions != null)
                     {
-                        foreach (var answer in question.Answers)
+                        List<int> alreadyUsedQuestionIds = new List<int>();
+                        alreadyUsedQuestionIds = (from q in _testsContext.Questions
+                                                  select q.Id).ToList();
+                        List<int> alreadyUseвAnswerIds = new List<int>();
+                        alreadyUseвAnswerIds = (from a in _testsContext.Answers
+                                                select a.Id).ToList();
+                        foreach (var question in test.Questions)
                         {
-                            answer.QuestionId = question.Id;
-                            answer.Id = Enumerable.Range(1, Int32.MaxValue).First(digit => !alreadyUseвAnswerIds.Contains(digit));
-                            alreadyUseвAnswerIds.Add(answer.Id);
-                            _testsContext.Add(answer);
+                            question.TestId = testToCreate.Id;
+                            question.Id = Enumerable.Range(1, Int32.MaxValue).First(digit => !alreadyUsedQuestionIds.Contains(digit));
+                            alreadyUsedQuestionIds.Add(question.Id);
+                            _testsContext.Questions.Add(question);
                             _testsContext.SaveChanges();
+
+                            if (question.Answers != null)
+                            {
+                                foreach (var answer in question.Answers)
+                                {
+                                    answer.QuestionId = question.Id;
+                                    answer.Id = Enumerable.Range(1, Int32.MaxValue).First(digit => !alreadyUseвAnswerIds.Contains(digit));
+                                    alreadyUseвAnswerIds.Add(answer.Id);
+                                    _testsContext.Add(answer);
+                                    _testsContext.SaveChanges();
+                                }
+                            }
                         }
                     }
+                    transaction.Commit();
+                }
+                catch (Exception e)
+                {
+                    transaction.Rollback();
+                    return e.Message;
                 }
             }
-            return testToCreate;
+            return "Test successfully created.";
         }
         //delete
         public void DeleteTest(int id)

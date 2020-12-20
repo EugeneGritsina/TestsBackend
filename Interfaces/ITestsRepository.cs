@@ -12,7 +12,7 @@ namespace WebApiAttempt1.Repositories
         public IQueryable<TestWithObjectSubject> GetTestsWithObjectSubject(int itemsAmount);
         public TestForProfessorDTO GetTestForProfessor(int id);
         public TestForStudentDTO GetTestToCompleteToStudent(int id);
-        public Test CreateTest(InputTestDTO test);
+        public string CreateTest(InputTestDTO test);
         public void DeleteTest(int id);
         public string CloseOrOpenTest(int id);
         public string UpdateTest(InputTestDTO test);
