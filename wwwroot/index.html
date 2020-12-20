@@ -5,12 +5,25 @@
     <title>TestsBSU API</title>
 </head>
 <body>
-    <h1>Welcome to TestsBSU API version 0.5</h1>
+    <h1>Welcome to TestsBSU API version 0.6</h1>
 
     <a href="https://testsbsu.azurewebsites.net/swagger">Link to <strong>Swagger</strong></a> <br />
     <a href="https://github.com/EugeneGritsina/TestsBackend/blob/master/README.md">Link to the repository with <strong>Documentation</strong></a>
 
     <h3>Updates:</h3>
+    <ul>
+        <li>
+            Pagination on getSubjects and getTests methods.
+        </li>
+        <li>
+            Question and Subject has a full object of it's type.
+        </li>
+        <li>
+            Date and time fields in Test object are back in DateTime format  now (it was string before). Needed a parsing of them (back or front?)
+        </li>
+    </ul>
+
+    <p>Version 0.5 updates:</p>
     <ul>
         <li>Enabled Swagger.</li>
     </ul>
@@ -41,7 +54,7 @@
 
     <style>
         body {
-            background-color:aqua;
+            background-color: aqua;
         }
     </style>
 </body>
