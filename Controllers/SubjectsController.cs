@@ -16,7 +16,7 @@ namespace WebApiAttempt1.Controllers
 
        [HttpGet]
        [Produces("application/json")]
-        public List<SubjectsListDTO> GetSubjects()
+        public List<SubjectsListDTO> GetSubjects(int itemsAmount)
         {
             return (from s in TestsContext.Subjects
                     select new SubjectsListDTO
@@ -38,7 +38,7 @@ namespace WebApiAttempt1.Controllers
                                     IsOpen = t.IsOpen,
                                     CreationDate = t.CreationDate
                                 }).ToList()
-                    }).ToList();
+                    }).Take(itemsAmount).ToList();
         }
 
     }

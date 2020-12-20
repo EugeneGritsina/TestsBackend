@@ -17,9 +17,9 @@ namespace WebApiAttempt1.Repositories
             _testsContext = testsContext;
         }
 
-        public IQueryable<TestWithObjectSubject> GetTestsWithObjectSubject()
+        public IQueryable<TestWithObjectSubject> GetTestsWithObjectSubject(int itemsAmount)
         {
-            return from t in _testsContext.Tests
+            return (from t in _testsContext.Tests
                    select new TestWithObjectSubject
                    {
                        Id = t.Id,
@@ -39,7 +39,7 @@ namespace WebApiAttempt1.Repositories
                                                           where subType.Id == s.SubjectTypeId
                                                           select subType).First()
                                         }).First()
-                   };
+                   }).Take(itemsAmount);
         }
 
         public TestForProfessorDTO GetTestForProfessor(int id)
@@ -148,7 +148,7 @@ namespace WebApiAttempt1.Repositories
 
             return test;
         }
-
+        //create
         public Test CreateTest(InputTestDTO test)
         {
             if (test == null)
@@ -211,20 +211,20 @@ namespace WebApiAttempt1.Repositories
             }
             return testToCreate;
         }
-
+        //delete
         public void DeleteTest(int id)
         {
             _testsContext.Tests.Remove(_testsContext.Tests.Find(id));
             _testsContext.SaveChanges();
         }
-
+        //patch
         public string CloseOrOpenTest(int id)
         {
             _testsContext.Tests.Find(id).IsOpen = _testsContext.Tests.Find(id).IsOpen == true ? false : true;
             _testsContext.SaveChanges();
             return $"State of test with id: {id} was changed.";
         }
-
+        //put
         public string UpdateTest(InputTestDTO test)
         {
             Test testToUpdate = _testsContext.Tests.Find(test.Id);       // берем тест, который нужно обновить

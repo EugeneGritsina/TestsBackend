@@ -9,7 +9,7 @@ namespace WebApiAttempt1.Repositories
 {
     public interface ITestsRepository
     {
-        public IQueryable<TestWithObjectSubject> GetTestsWithObjectSubject();
+        public IQueryable<TestWithObjectSubject> GetTestsWithObjectSubject(int itemsAmount);
         public TestForProfessorDTO GetTestForProfessor(int id);
         public TestForStudentDTO GetTestToCompleteToStudent(int id);
         public Test CreateTest(InputTestDTO test);

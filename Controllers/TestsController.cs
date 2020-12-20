@@ -25,11 +25,11 @@ namespace WebApiAttempt1.Controllers
         }
 
         [HttpGet]
-        public ActionResult<IQueryable<TestWithObjectSubject>> GetListOfSubjectAndTests()
+        public ActionResult<IQueryable<TestWithObjectSubject>> GetListOfSubjectAndTests(int itemsAmount)
         {
             try
             {
-                return Ok(_testsRepository.GetTestsWithObjectSubject());
+                return Ok(_testsRepository.GetTestsWithObjectSubject(itemsAmount));
             }
             catch (Exception e)
             {
