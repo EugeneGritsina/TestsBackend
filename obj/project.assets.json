@@ -8351,19 +8351,19 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\eugen\\.nuget\\packages\\": {}
+    "C:\\Users\\fak31\\.nuget\\packages\\": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\projects\\TestsBackend\\WebApiAttempt1.csproj",
+      "projectUniqueName": "D:\\Programmining\\TestsBackend\\WebApiAttempt1.csproj",
       "projectName": "WebApiAttempt1",
-      "projectPath": "C:\\projects\\TestsBackend\\WebApiAttempt1.csproj",
-      "packagesPath": "C:\\Users\\eugen\\.nuget\\packages\\",
-      "outputPath": "C:\\projects\\TestsBackend\\obj\\",
+      "projectPath": "D:\\Programmining\\TestsBackend\\WebApiAttempt1.csproj",
+      "packagesPath": "C:\\Users\\fak31\\.nuget\\packages\\",
+      "outputPath": "D:\\Programmining\\TestsBackend\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
-        "C:\\Users\\eugen\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Users\\fak31\\AppData\\Roaming\\NuGet\\NuGet.Config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
       "originalTargetFrameworks": [
@@ -8375,6 +8375,7 @@
       },
       "frameworks": {
         "netcoreapp3.1": {
+          "targetAlias": "netcoreapp3.1",
           "projectReferences": {}
         }
       },
@@ -8386,6 +8387,7 @@
     },
     "frameworks": {
       "netcoreapp3.1": {
+        "targetAlias": "netcoreapp3.1",
         "dependencies": {
           "Microsoft.EntityFrameworkCore": {
             "target": "Package",
@@ -8430,7 +8432,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\3.1.403\\RuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\5.0.101\\RuntimeIdentifierGraph.json"
       }
     }
   }
