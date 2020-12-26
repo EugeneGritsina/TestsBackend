@@ -14,8 +14,8 @@ namespace WebApiAttempt1.Controllers
 
         public SubjectsController(TestsContext testsContext) => TestsContext = testsContext;
 
-       [HttpGet]
-       [Produces("application/json")]
+        [HttpGet("{itemsAmount}, {pageNumber}")]
+        [Produces("application/json")]
         public List<SubjectsListDTO> GetSubjects(int itemsAmount, int pageNumber)
         {
             return (from s in TestsContext.Subjects

@@ -41,6 +41,31 @@ namespace WebApiAttempt1.Repositories
                                         }).First()
                    }).Skip(itemsAmount * (pageNumber-1)).Take(itemsAmount);
         }
+        public IQueryable<TestWithObjectSubject> GetTestsWithObjectSubject()
+        {
+            return (from t in _testsContext.Tests
+                    select new TestWithObjectSubject
+                    {
+                        Id = t.Id,
+                        Name = t.Name,
+                        DueDateTime = t.DueDateTime,
+                        EstimatedTime = t.EstimatedTime,
+                        QuestionsAmount = t.QuestionsAmount,
+                        MaxMark = t.MaxMark,
+                        IsOpen = t.IsOpen,
+                        CreationDate = t.CreationDate,
+                        SubjectDTO = (from s in _testsContext.Subjects
+                                      where s.Id == t.SubjectId
+                                      select new SubjectDTO
+                                      {
+                                          Id = s.Id,
+                                          Name = s.Name,
+                                          SubjectType = (from subType in _testsContext.SubjectTypes
+                                                         where subType.Id == s.SubjectTypeId
+                                                         select subType).First()
+                                      }).First()
+                    });
+        }
 
         public TestForProfessorDTO GetTestForProfessor(int id)
         {

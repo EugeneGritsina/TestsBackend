@@ -24,12 +24,25 @@ namespace WebApiAttempt1.Controllers
             _testsService = testsService;
         }
 
-        [HttpGet]
+        [HttpGet("{itemsAmount},{pageNumber}")]
         public ActionResult<IQueryable<TestWithObjectSubject>> GetListOfSubjectAndTests(int itemsAmount, int pageNumber)
         {
             try
             {
                 return Ok(_testsRepository.GetTestsWithObjectSubject(itemsAmount, pageNumber));
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
+
+        [HttpGet]
+        public ActionResult<IQueryable<TestWithObjectSubject>> GetListOfSubjectAndTests()
+        {
+            try
+            {
+                return Ok(_testsRepository.GetTestsWithObjectSubject());
             }
             catch (Exception e)
             {
