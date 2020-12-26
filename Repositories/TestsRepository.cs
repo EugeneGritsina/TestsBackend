@@ -81,7 +81,7 @@ namespace WebApiAttempt1.Repositories
                          MaxMark = t.MaxMark,
                          IsOpen = t.IsOpen,
                          CreationDate = t.CreationDate,
-                         SubjectObject = (from s in _testsContext.Subjects
+                         SubjectDTO = (from s in _testsContext.Subjects
                                           where s.Id == t.SubjectId
                                           select new SubjectDTO {
                                               Id = s.Id,
