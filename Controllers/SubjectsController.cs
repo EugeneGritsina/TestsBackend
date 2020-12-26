@@ -10,23 +10,23 @@ namespace WebApiAttempt1.Controllers
     [ApiController]
     public class SubjectsController : ControllerBase
     {
-        TestsContext TestsContext;
+        TestsContext _testsContext;
 
-        public SubjectsController(TestsContext testsContext) => TestsContext = testsContext;
+        public SubjectsController(TestsContext testsContext) => _testsContext = testsContext;
 
         [HttpGet("{itemsAmount}, {pageNumber}")]
         [Produces("application/json")]
-        public List<SubjectsListDTO> GetSubjects(int itemsAmount, int pageNumber)
+        public List<SubjectsListDTO> GetSubjectsWithListOfTests(int itemsAmount, int pageNumber)
         {
-            return (from s in TestsContext.Subjects
+            return (from s in _testsContext.Subjects
                     select new SubjectsListDTO
                     {
                         Id = s.Id,
-                        SubjectType = (from subjectType in TestsContext.SubjectTypes
+                        SubjectType = (from subjectType in _testsContext.SubjectTypes
                                          where subjectType.Id == s.SubjectTypeId
                                          select subjectType).First(),
                         Name = s.Name,
-                        Tests = (from t in TestsContext.Tests
+                        Tests = (from t in _testsContext.Tests
                                 where t.SubjectId == s.Id
                                 select new TestDTO {
                                     Id = t.Id,
@@ -43,17 +43,17 @@ namespace WebApiAttempt1.Controllers
 
         [HttpGet]
         [Produces("application/json")]
-        public List<SubjectsListDTO> GetSubjects()
+        public List<SubjectsListDTO> GetSubjectsWithListOfTests()
         {
-            return (from s in TestsContext.Subjects
+            return (from s in _testsContext.Subjects
                     select new SubjectsListDTO
                     {
                         Id = s.Id,
-                        SubjectType = (from subjectType in TestsContext.SubjectTypes
+                        SubjectType = (from subjectType in _testsContext.SubjectTypes
                                        where subjectType.Id == s.SubjectTypeId
                                        select subjectType).First(),
                         Name = s.Name,
-                        Tests = (from t in TestsContext.Tests
+                        Tests = (from t in _testsContext.Tests
                                  where t.SubjectId == s.Id
                                  select new TestDTO
                                  {
@@ -69,5 +69,17 @@ namespace WebApiAttempt1.Controllers
                     }).ToList();
         }
 
+        [HttpGet]
+        [Route("list")]
+        [Produces("application/json")]
+        public object GetSubjects()
+        {
+            return (from s in _testsContext.Subjects
+                    select new
+                    {
+                        Id = s.Id,
+                        Name = s.Name
+                    }).ToList();
+        }
     }
 }
