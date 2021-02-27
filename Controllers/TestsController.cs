@@ -82,7 +82,7 @@ namespace WebApiAttempt1.Controllers
         {
             try
             {
-                return Ok(_testsRepository.CreateTest(test));
+                return Ok(_testsRepository.PostCreateTest(test));
             }
             catch(Exception e)
             {
@@ -104,7 +104,7 @@ namespace WebApiAttempt1.Controllers
         }
 
         [HttpPatch("{id}")]
-        public ActionResult CloseOrOpenTest(int id)
+        public ActionResult PatchCloseOrOpenTest(int id)
         {
             try 
             {
@@ -132,7 +132,7 @@ namespace WebApiAttempt1.Controllers
 
         [HttpPost]
         [Route("CheckAnswers")]
-        public ActionResult CheckAnswers(TestForProfessorDTO testSentByUser)
+        public ActionResult PostCheckAnswers(TestForProfessorDTO testSentByUser)
         {
             try
             {

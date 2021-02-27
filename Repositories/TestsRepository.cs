@@ -174,7 +174,7 @@ namespace WebApiAttempt1.Repositories
             return test;
         }
         //create
-        public string CreateTest(InputTestDTO test)
+        public string PostCreateTest(InputTestDTO test)
         {
             if (test == null)
                 throw new Exception("Empty test.");

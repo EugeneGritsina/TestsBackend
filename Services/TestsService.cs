@@ -17,7 +17,6 @@ namespace WebApiAttempt1.Services
             _testsContext = testsContext;
         }
 
-
         public float CheckAnswers(TestForProfessorDTO testSentByUser)
         {
             float gainedMark = 0;
@@ -47,6 +46,12 @@ namespace WebApiAttempt1.Services
                     gainedMark += (float)q.Points;
             }
             return gainedMark;
+        }
+
+        public bool UpdateStatusOfTestsAccordingToCurrentNow()
+        {
+            
+            return true;
         }
     }
 }
