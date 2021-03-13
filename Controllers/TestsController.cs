@@ -63,20 +63,6 @@ namespace WebApiAttempt1.Controllers
             }
         }
 
-        [HttpGet]
-        [Route("student/{id}")]
-        public ActionResult<TestForStudentDTO> GetTestToCompleteToStudent(int id)
-        {
-            try
-            {
-                return Ok(_testsRepository.GetTestToCompleteToStudent(id));
-            }
-            catch (Exception e)
-            {
-                return BadRequest(e.Message);
-            }
-        }
-
         [HttpPost]
         public ActionResult Post(InputTestDTO test)
         {
