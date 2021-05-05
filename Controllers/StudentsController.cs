@@ -1,11 +1,11 @@
 ﻿using System;
 using Microsoft.AspNetCore.Mvc;
-using WebApiAttempt1.DTO;
-using WebApiAttempt1.JSONmodels;
-using WebApiAttempt1.Repositories;
-using WebApiAttempt1.Services;
+using TestsBackend.DTO;
+using TestsBackend.JSONmodels;
+using TestsBackend.Repositories;
+using TestsBackend.Services;
 
-namespace WebApiAttempt1.Controllers
+namespace TestsBackend.Controllers
 {
     [Route("api/student")]
     [ApiController]

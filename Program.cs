@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Hosting;
 
-namespace WebApiAttempt1
+namespace TestsBackend
 {
     public class Program
     {

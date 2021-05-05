@@ -1,14 +1,14 @@
 ﻿using System;
 using System.Linq;
 using Microsoft.AspNetCore.Mvc;
-using WebApiAttempt1.DTO;
-using WebApiAttempt1.DTO.InputDTO;
-using WebApiAttempt1.JSONmodels;
-using WebApiAttempt1.Repositories;
-using WebApiAttempt1.Services;
-using WebApiAttempt1.ViewModels;
+using TestsBackend.DTO;
+using TestsBackend.DTO.InputDTO;
+using TestsBackend.JSONmodels;
+using TestsBackend.Repositories;
+using TestsBackend.Services;
+using TestsBackend.ViewModels;
 
-namespace WebApiAttempt1.Controllers
+namespace TestsBackend.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]

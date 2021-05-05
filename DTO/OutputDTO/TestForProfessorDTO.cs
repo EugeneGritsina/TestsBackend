@@ -1,9 +1,9 @@
 ﻿using System.Collections.Generic;
-using WebApiAttempt1.DTO;
-using WebApiAttempt1.Models;
-using WebApiAttempt1.ViewModels;
+using TestsBackend.DTO;
+using TestsBackend.Models;
+using TestsBackend.ViewModels;
 
-namespace WebApiAttempt1.JSONmodels
+namespace TestsBackend.JSONmodels
 {
     //<description> Test with all connected questions and question answers have status here. </description>
     public class TestForProfessorDTO : TestDTO

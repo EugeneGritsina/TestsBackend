@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
-using WebApiAttempt1.DTO.ModelsDTO;
+using TestsBackend.DTO.ModelsDTO;
 
-namespace WebApiAttempt1.DTO
+namespace TestsBackend.DTO
 {
     public class TestForStudentDTO : TestDTO
     {

@@ -1,7 +1,7 @@
-﻿using WebApiAttempt1.DTO;
-using WebApiAttempt1.Models;
+﻿using TestsBackend.DTO;
+using TestsBackend.Models;
 
-namespace WebApiAttempt1.ViewModels
+namespace TestsBackend.ViewModels
 {
     public class TestWithObjectSubject : TestDTO
     {

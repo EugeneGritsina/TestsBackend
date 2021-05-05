@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 
-namespace WebApiAttempt1.Models
+namespace TestsBackend.Models
 {
     public class TestsContext : DbContext
     {

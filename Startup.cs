@@ -1,14 +1,14 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
-using WebApiAttempt1.Models;
+using TestsBackend.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Hosting;
-using WebApiAttempt1.Repositories;
-using WebApiAttempt1.Services;
+using TestsBackend.Repositories;
+using TestsBackend.Services;
 
-namespace WebApiAttempt1
+namespace TestsBackend
 {
     public class Startup
     {

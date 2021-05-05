@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace WebApiAttempt1.DTO
+namespace TestsBackend.DTO
 {
     public class TestDTO
     {

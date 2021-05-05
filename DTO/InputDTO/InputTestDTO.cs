@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using WebApiAttempt1.Models;
+using TestsBackend.Models;
 
-namespace WebApiAttempt1.DTO.InputDTO
+namespace TestsBackend.DTO.InputDTO
 {
     public class InputTestDTO : Test
     {

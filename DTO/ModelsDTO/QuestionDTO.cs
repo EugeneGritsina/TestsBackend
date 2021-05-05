@@ -1,6 +1,6 @@
-﻿using WebApiAttempt1.Models;
+﻿using TestsBackend.Models;
 
-namespace WebApiAttempt1.DTO.ModelsDTO
+namespace TestsBackend.DTO.ModelsDTO
 {
     public class QuestionDTO
     {

@@ -2,11 +2,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using WebApiAttempt1.JSONmodels;
-using WebApiAttempt1.Models;
-using WebApiAttempt1.ViewModels;
+using TestsBackend.JSONmodels;
+using TestsBackend.Models;
+using TestsBackend.ViewModels;
 
-namespace WebApiAttempt1.Services
+namespace TestsBackend.Services
 {
     public class TestsService : ITestsService
     {

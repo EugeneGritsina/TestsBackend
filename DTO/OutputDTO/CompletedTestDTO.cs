@@ -1,4 +1,4 @@
-﻿namespace WebApiAttempt1.DTO
+﻿namespace TestsBackend.DTO
 {
     public class CompletedTestDTO : TestDTO
     {

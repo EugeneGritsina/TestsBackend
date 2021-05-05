@@ -2,7 +2,7 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace WebApiAttempt1.Models
+namespace TestsBackend.Models
 {
     public class Subject
     {

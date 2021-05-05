@@ -1,13 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using WebApiAttempt1.DTO;
-using WebApiAttempt1.DTO.InputDTO;
-using WebApiAttempt1.JSONmodels;
-using WebApiAttempt1.Models;
-using WebApiAttempt1.ViewModels;
+using TestsBackend.DTO;
+using TestsBackend.DTO.InputDTO;
+using TestsBackend.JSONmodels;
+using TestsBackend.Models;
+using TestsBackend.ViewModels;
 
-namespace WebApiAttempt1.Repositories
+namespace TestsBackend.Repositories
 {
     public class TestsRepository : ITestsRepository
     {

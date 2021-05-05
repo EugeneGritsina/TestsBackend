@@ -1,6 +1,6 @@
-﻿using WebApiAttempt1.JSONmodels;
+﻿using TestsBackend.JSONmodels;
 
-namespace WebApiAttempt1.Services
+namespace TestsBackend.Services
 {
     public interface ITestsService
     {

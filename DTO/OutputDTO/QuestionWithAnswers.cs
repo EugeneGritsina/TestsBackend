@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using WebApiAttempt1.DTO.ModelsDTO;
-using WebApiAttempt1.Models;
+using TestsBackend.DTO.ModelsDTO;
+using TestsBackend.Models;
 
-namespace WebApiAttempt1.ViewModels
+namespace TestsBackend.ViewModels
 {
     public class QuestionWithAnswers : QuestionDTO
     {

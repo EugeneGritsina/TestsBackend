@@ -1,10 +1,10 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.Linq;
-using WebApiAttempt1.DTO;
-using WebApiAttempt1.Models;
+using TestsBackend.DTO;
+using TestsBackend.Models;
 
-namespace WebApiAttempt1.Controllers
+namespace TestsBackend.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
