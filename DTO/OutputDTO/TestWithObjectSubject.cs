@@ -1,5 +1,4 @@
 ﻿using TestsBackend.DTO;
-using TestsBackend.Models;
 
 namespace TestsBackend.ViewModels
 {

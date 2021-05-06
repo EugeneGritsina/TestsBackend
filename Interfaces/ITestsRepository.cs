@@ -10,7 +10,8 @@ namespace TestsBackend.Repositories
     public interface ITestsRepository
     {
         public IQueryable<TestWithObjectSubject> GetTestsWithObjectSubject(int itemsAmount, int pageNumber);
-        public IQueryable<TestWithObjectSubject> GetTestsWithObjectSubject();
+        public IQueryable<TestTableModel> GetTestsForTable();
+        //public IQueryable<TestWithObjectSubject> GetTestsWithObjectSubject();
         public TestForProfessorDTO GetTestForProfessor(int id);
         public TestForStudentDTO GetTestToCompleteToStudent(int id);
         public string PostCreateTest(InputTestDTO test);

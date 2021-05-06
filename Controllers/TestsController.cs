@@ -38,11 +38,11 @@ namespace TestsBackend.Controllers
         }
 
         [HttpGet]
-        public ActionResult<IQueryable<TestWithObjectSubject>> GetListOfSubjectAndTests()
+        public ActionResult<IQueryable<TestWithObjectSubject>> GetTableOfTests()
         {
             try
             {
-                return Ok(_testsRepository.GetTestsWithObjectSubject());
+                return Ok(_testsRepository.GetTestsForTable());
             }
             catch (Exception e)
             {

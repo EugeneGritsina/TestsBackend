@@ -6,7 +6,6 @@ namespace TestsBackend.Models
 {
     public class Test
     {
-
         [Column(name: "id")]
         [Key]
         public int Id { get; set; }
@@ -35,4 +34,12 @@ namespace TestsBackend.Models
         [Column(name: "creation_date")]
         public DateTime CreationDate { get; set; }
     }
+
+    public class TestTableModel {
+        public int Id { get; set; }
+        public string Name { get; set; }
+        public DateTime CreationDate { get; set; }
+        public string SubjectName { get; set; }
+    }
+
 }
