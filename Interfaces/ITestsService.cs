@@ -1,4 +1,4 @@
-﻿using TestsBackend.JSONmodels;
+﻿using TestsBackend.Models;
 
 namespace TestsBackend.Services
 {

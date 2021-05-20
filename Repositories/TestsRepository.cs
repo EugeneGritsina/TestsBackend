@@ -1,11 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using TestsBackend.DTO;
-using TestsBackend.DTO.InputDTO;
-using TestsBackend.JSONmodels;
 using TestsBackend.Models;
-using TestsBackend.ViewModels;
 
 namespace TestsBackend.Repositories
 {

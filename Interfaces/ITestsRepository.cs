@@ -1,9 +1,5 @@
 ﻿using System.Linq;
-using TestsBackend.DTO;
-using TestsBackend.JSONmodels;
-using TestsBackend.ViewModels;
 using TestsBackend.Models;
-using TestsBackend.DTO.InputDTO;
 
 namespace TestsBackend.Repositories
 {

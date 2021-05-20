@@ -1,7 +1,6 @@
 ﻿using System;
 using Microsoft.AspNetCore.Mvc;
-using TestsBackend.DTO;
-using TestsBackend.JSONmodels;
+using TestsBackend.Models;
 using TestsBackend.Repositories;
 using TestsBackend.Services;
 

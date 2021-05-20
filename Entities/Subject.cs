@@ -1,4 +1,4 @@
-﻿using System;
+﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -16,5 +16,15 @@ namespace TestsBackend.Models
         [Column(name: "subject_type_id")]
         public int SubjectTypeId { get; set; }
 
+    }
+    public class SubjectDTO
+    {
+        public int Id { get; set; }
+        public string Name { get; set; }
+        public SubjectType SubjectType { get; set; }
+    }
+    public class SubjectsListDTO : SubjectDTO
+    {
+        public List<TestDTO> Tests { get; set; }
     }
 }
