@@ -67,6 +67,13 @@ namespace TestsBackend
             app.UseAuthentication();
             app.UseRouting();
             app.UseAuthorization();
+
+            app.UseCors(builder =>
+            {
+                builder.AllowAnyOrigin();
+                builder.AllowAnyHeader();
+                builder.AllowAnyMethod();
+            });
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
