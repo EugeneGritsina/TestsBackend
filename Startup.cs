@@ -11,6 +11,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using TestsBackend.Authentication;
 using Microsoft.IdentityModel.Tokens;
 using TestsBackend.Interfaces;
+using TestsBackend.Entities;
 
 namespace TestsBackend
 {
@@ -25,8 +26,10 @@ namespace TestsBackend
         {
             string connection = configuration.GetConnectionString("TestsBSUConnection");
             services.AddDbContext<TestsContext>(options => options.UseSqlServer(connection));
+            services.AddDbContext<UserContext>(options => options.UseSqlServer(connection));
             services.AddScoped<ITestsRepository, TestsRepository>();
             services.AddScoped<ITestsService, TestsService>();
+            services.AddScoped<IUserService, UserService>();
             services.AddScoped<IAuthenticationService, AuthenticationService>();
             services.AddScoped<ISubjectsService, SubjectsService>();
             services.AddControllers();

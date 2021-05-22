@@ -8,21 +8,20 @@ using System.Security.Claims;
 using TestsBackend.Authentication;
 using TestsBackend.Entities;
 using TestsBackend.Interfaces;
-using TestsBackend.Models;
 
 namespace TestsBackend.Services
 {
     public class AuthenticationService : IAuthenticationService
     {
-        TestsContext _testsContext;
-        public AuthenticationService(TestsContext testsContext) => _testsContext = testsContext;
+        UserContext _userService;
+        public AuthenticationService(UserContext userService) => _userService = userService;
 
         public ClaimsIdentity GetIdentity(string username, string password)
         {
-            User user = _testsContext.Users.FirstOrDefault(x => x.Email == username && x.Password == password);
+            User user = _userService.Users.FirstOrDefault(x => x.Email == username && x.Password == password);
             if (user != null)
             {
-                Role role = _testsContext.Roles.FirstOrDefault(role => role.Id == user.Role);
+                Role role = _userService.Roles.FirstOrDefault(role => role.Id == user.Role);
                 var claims = new List<Claim>
                 {
                     new Claim(ClaimsIdentity.DefaultNameClaimType, user.Email),
