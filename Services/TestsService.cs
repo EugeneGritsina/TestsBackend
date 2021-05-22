@@ -8,10 +8,7 @@ namespace TestsBackend.Services
     {
         TestsContext _testsContext;
 
-        public TestsService(TestsContext testsContext)
-        {
-            _testsContext = testsContext;
-        }
+        public TestsService(TestsContext testsContext) => _testsContext = testsContext;
 
         public float CheckAnswers(TestForProfessorDTO testSentByUser)
         {

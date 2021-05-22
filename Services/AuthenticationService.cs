@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.IdentityModel.Tokens;
+﻿using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -16,10 +15,8 @@ namespace TestsBackend.Services
     public class AuthenticationService : IAuthenticationService
     {
         TestsContext _testsContext;
-        public AuthenticationService(TestsContext testsContext)
-        {
-            _testsContext = testsContext;
-        }
+        public AuthenticationService(TestsContext testsContext) => _testsContext = testsContext;
+
         public ClaimsIdentity GetIdentity(string username, string password)
         {
             User user = _testsContext.Users.FirstOrDefault(x => x.Email == username && x.Password == password);
@@ -39,7 +36,6 @@ namespace TestsBackend.Services
 
         public string CreateJWT(ClaimsIdentity identity)
         {
-
             var now = DateTime.UtcNow;
             var jwt = new JwtSecurityToken(
                     issuer: AuthOptions.ISSUER,

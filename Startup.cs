@@ -28,6 +28,7 @@ namespace TestsBackend
             services.AddScoped<ITestsRepository, TestsRepository>();
             services.AddScoped<ITestsService, TestsService>();
             services.AddScoped<IAuthenticationService, AuthenticationService>();
+            services.AddScoped<ISubjectsService, SubjectsService>();
             services.AddControllers();
             services.AddMvc();
             services.AddSwaggerGen(c =>
