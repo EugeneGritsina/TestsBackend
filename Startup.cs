@@ -64,9 +64,14 @@ namespace TestsBackend
             {
                 app.UseDeveloperExceptionPage();
             }
-
-            app.UseStaticFiles();
+            app.UseAuthentication();
             app.UseRouting();
+            app.UseAuthorization();
+            app.UseEndpoints(endpoints =>
+            {
+                endpoints.MapControllers();
+            });
+            app.UseStaticFiles();
 
             app.UseSwagger();
             app.UseSwaggerUI(x =>
@@ -81,14 +86,6 @@ namespace TestsBackend
                 builder.AllowAnyHeader();
                 builder.AllowAnyMethod();
             });
-
-            app.UseEndpoints(endpoints =>
-            {
-                endpoints.MapControllers();
-            });
-
-            app.UseAuthentication();
-            app.UseAuthorization();
         }
     }
 }

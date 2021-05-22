@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using System;
 using TestsBackend.Entities;
 using TestsBackend.Interfaces;
@@ -34,6 +35,7 @@ namespace TestsBackend.Controllers
         }
 
         [HttpGet("/user")]
+        //[Authorize(Roles = "student")]
         public ActionResult<User> GetUser(int id)
         {
             try

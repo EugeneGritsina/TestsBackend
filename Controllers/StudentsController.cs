@@ -7,10 +7,10 @@ using TestsBackend.Services;
 
 namespace TestsBackend.Controllers
 {
-    [Route("api/student")]
+    [Route("api/[controller]")]
     [ApiController]
     [Produces("application/json")]
-    [Authorize(Roles = "student")]
+    //[Authorize(Roles = "student")]
     public class StudentsController : ControllerBase
     {
         readonly ITestsRepository _testsRepository;
@@ -23,7 +23,6 @@ namespace TestsBackend.Controllers
         }
 
         [HttpGet]
-        [Route("student/{id}")]
         public ActionResult<TestForStudentDTO> GetTestToCompleteToStudent(int id)
         {
             try

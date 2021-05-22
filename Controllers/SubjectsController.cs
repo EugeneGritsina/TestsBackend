@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using System;
 using System.Collections.Generic;
 using TestsBackend.Interfaces;
 using TestsBackend.Models;
@@ -7,6 +8,7 @@ namespace TestsBackend.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Produces("application/json")]
     public class SubjectsController : ControllerBase
     {
         ISubjectsService _subjectsService;
@@ -20,18 +22,30 @@ namespace TestsBackend.Controllers
         //}
 
         [HttpGet]
-        [Produces("application/json")]
-        public List<SubjectsListDTO> GetSubjectsWithListOfTests()
+        public ActionResult<List<SubjectsListDTO>> GetSubjectsWithListOfTests()
         {
-            return _subjectsService.GetSubjectsWithListOfTests();
+            try
+            {
+                return _subjectsService.GetSubjectsWithListOfTests();
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e);
+            }
         }
 
         [HttpGet]
         [Route("list")]
-        [Produces("application/json")]
-        public object GetSubjects()
+        public ActionResult<List<SubjectDTO>> GetSubjects()
         {
-            return _subjectsService.GetSubjects();
+            try
+            {
+                return _subjectsService.GetSubjects();
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e);
+            }
         }
     }
 }
