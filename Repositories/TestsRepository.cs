@@ -253,7 +253,7 @@ namespace TestsBackend.Repositories
                 catch (Exception e)
                 {
                     transaction.Rollback();
-                    return e.Message;
+                    throw e;
                 }
             }
             return "Test successfully created.";
