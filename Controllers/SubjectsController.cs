@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.Linq;
 using TestsBackend.Models;
@@ -10,7 +11,6 @@ namespace TestsBackend.Controllers
     public class SubjectsController : ControllerBase
     {
         TestsContext _testsContext;
-
         public SubjectsController(TestsContext testsContext) => _testsContext = testsContext;
 
         [HttpGet("{itemsAmount}, {pageNumber}")]

@@ -1,4 +1,5 @@
 ﻿using System;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using TestsBackend.Models;
 using TestsBackend.Repositories;
@@ -9,6 +10,7 @@ namespace TestsBackend.Controllers
     [Route("api/student")]
     [ApiController]
     [Produces("application/json")]
+    [Authorize(Roles = "student")]
     public class StudentsController : ControllerBase
     {
         readonly ITestsRepository _testsRepository;

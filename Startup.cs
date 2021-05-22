@@ -7,6 +7,10 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Hosting;
 using TestsBackend.Repositories;
 using TestsBackend.Services;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using TestsBackend.Authentication;
+using Microsoft.IdentityModel.Tokens;
+using TestsBackend.Interfaces;
 
 namespace TestsBackend
 {
@@ -23,12 +27,31 @@ namespace TestsBackend
             services.AddDbContext<TestsContext>(options => options.UseSqlServer(connection));
             services.AddScoped<ITestsRepository, TestsRepository>();
             services.AddScoped<ITestsService, TestsService>();
+            services.AddScoped<IAuthenticationService, AuthenticationService>();
             services.AddControllers();
             services.AddMvc();
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new Microsoft.OpenApi.Models.OpenApiInfo { Title = "TestsBSU API", Version = "v1" });
             });
+            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+                .AddJwtBearer(options =>
+                {
+                    options.RequireHttpsMetadata = false;
+                    options.TokenValidationParameters = new TokenValidationParameters
+                    {
+                        // will be validation of the issuer executed?
+                        ValidateIssuer = true,
+                        ValidIssuer = AuthOptions.ISSUER,
+                        // will be validation of the audience executed?
+                        ValidateAudience = true,
+                        ValidAudience = AuthOptions.AUDIENCE,
+                        ValidateLifetime = true,
+                        // setting security key
+                        IssuerSigningKey = AuthOptions.GetSymmetricSecurityKey(),
+                        ValidateIssuerSigningKey = true,
+                    };
+                });
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
@@ -59,6 +82,9 @@ namespace TestsBackend
             {
                 endpoints.MapControllers();
             });
+
+            app.UseAuthentication();
+            app.UseAuthorization();
         }
     }
 }
