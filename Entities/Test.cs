@@ -41,6 +41,7 @@ namespace TestsBackend.Models
         public string Name { get; set; }
         public DateTime CreationDate { get; set; }
         public string SubjectName { get; set; }
+        public bool IsOpen { get; set; }
     }
     public class TestDTO
     {

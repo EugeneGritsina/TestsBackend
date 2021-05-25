@@ -48,7 +48,8 @@ namespace TestsBackend.Repositories
                         CreationDate = t.CreationDate,
                         SubjectName = (from s in _testsContext.Subjects
                                       where s.Id == t.SubjectId
-                                      select s.Name).First()
+                                      select s.Name).First(),
+                        IsOpen = t.IsOpen,
                     });
         }
         /*
