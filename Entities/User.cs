@@ -9,7 +9,7 @@ namespace TestsBackend.Entities
         [Key]
         public int Id { get; set; }
         [Column(name: "student_ticket_id")]
-        public int? StudentTicketId { get; set; }
+        public string StudentTicketId { get; set; }
 
         [Column(name: "name")]
         public string Name { get; set; }
