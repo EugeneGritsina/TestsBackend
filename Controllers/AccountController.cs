@@ -17,9 +17,9 @@ namespace TestsBackend.Controllers
         }
 
         [HttpPost("/token")]
-        public ActionResult<string> Token(string username, string password)
+        public ActionResult<string> Token([FromBody]UserLoginInfo userLoginInfo)
         {
-            var identity = _authService.GetIdentity(username, password);
+            var identity = _authService.GetIdentity(userLoginInfo.UserName, userLoginInfo.Password);
             if (identity == null)
             {
                 return BadRequest(new { message = "Invalid username or password." });
