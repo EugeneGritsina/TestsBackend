@@ -25,7 +25,8 @@ namespace TestsBackend.Services
                 var claims = new List<Claim>
                 {
                     new Claim(ClaimsIdentity.DefaultNameClaimType, user.Email),
-                    new Claim(ClaimsIdentity.DefaultRoleClaimType, role.Name)
+                    new Claim(ClaimsIdentity.DefaultRoleClaimType, role.Name),
+                    new Claim(ClaimsIdentity.DefaultNameClaimType, user.Id.ToString())
                 };
                 ClaimsIdentity claimsIdentity = new ClaimsIdentity(claims, "Token", ClaimsIdentity.DefaultNameClaimType, ClaimsIdentity.DefaultRoleClaimType);
                 return claimsIdentity;
