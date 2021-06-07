@@ -16,7 +16,7 @@ namespace TestsBackend.Services
         UserContext _userService;
         public AuthenticationService(UserContext userService) => _userService = userService;
 
-        public ClaimsIdentity GetIdentity(string username, string password)
+        public (ClaimsIdentity, int?) GetIdentity(string username, string password)
         {
             User user = _userService.Users.FirstOrDefault(x => x.Email == username && x.Password == password);
             if (user != null)
@@ -25,31 +25,33 @@ namespace TestsBackend.Services
                 var claims = new List<Claim>
                 {
                     new Claim(ClaimsIdentity.DefaultNameClaimType, user.Email),
-                    new Claim(ClaimsIdentity.DefaultRoleClaimType, role.Name),
-                    new Claim(ClaimsIdentity.DefaultNameClaimType, user.Id.ToString())
+                    new Claim(ClaimsIdentity.DefaultRoleClaimType, role.Name)
                 };
                 ClaimsIdentity claimsIdentity = new ClaimsIdentity(claims, "Token", ClaimsIdentity.DefaultNameClaimType, ClaimsIdentity.DefaultRoleClaimType);
-                return claimsIdentity;
+                return (claimsIdentity, user.Id);
             }
-            return null;
+            return (null, null);
         }
 
-        public string CreateJWT(ClaimsIdentity identity)
+        public string CreateJWT((ClaimsIdentity, int?) identity)
         {
             var now = DateTime.UtcNow;
             var jwt = new JwtSecurityToken(
                     issuer: AuthOptions.ISSUER,
                     audience: AuthOptions.AUDIENCE,
                     notBefore: now,
-                    claims: identity.Claims,
+                    claims: identity.Item1.Claims,
                     expires: now.Add(TimeSpan.FromMinutes(AuthOptions.LIFETIME)),
-                    signingCredentials: new SigningCredentials(AuthOptions.GetSymmetricSecurityKey(), SecurityAlgorithms.HmacSha256));
+                    signingCredentials: new SigningCredentials(AuthOptions.GetSymmetricSecurityKey(), SecurityAlgorithms.HmacSha256)
+                    
+                    );
             var encodedJwt = new JwtSecurityTokenHandler().WriteToken(jwt);
 
             var response = new
             {
                 access_token = encodedJwt,
-                username = identity.Name
+                username = identity.Item1.Name,
+                userId = identity.Item2,
             };
 
             return JsonConvert.SerializeObject(response);

@@ -20,7 +20,7 @@ namespace TestsBackend.Controllers
         public ActionResult<string> Token([FromBody]UserLoginInfo userLoginInfo)
         {
             var identity = _authService.GetIdentity(userLoginInfo.UserName, userLoginInfo.Password);
-            if (identity == null)
+            if (identity.Item1 == null)
             {
                 return BadRequest(new { message = "Invalid username or password." });
             }

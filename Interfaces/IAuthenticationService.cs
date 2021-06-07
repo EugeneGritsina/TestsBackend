@@ -5,7 +5,7 @@ namespace TestsBackend.Interfaces
 {
     public interface IAuthenticationService
     {
-        public ClaimsIdentity GetIdentity(string username, string password);
-        public string CreateJWT(ClaimsIdentity identity);
+        public (ClaimsIdentity, int?) GetIdentity(string username, string password);
+        public string CreateJWT((ClaimsIdentity, int?) identity);
     }
 }
