@@ -40,11 +40,5 @@ namespace TestsBackend.Services
             }
             return gainedMark;
         }
-
-        public bool UpdateStatusOfTestsAccordingToCurrentNow()
-        {
-            
-            return true;
-        }
     }
 }
